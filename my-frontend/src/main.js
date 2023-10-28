@@ -1,4 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-createApp(App).mount('#app')
+const app = createApp(App);
+
+// 其他插件或全局设置
+// 例如：app.use(router)
+
+app.mount('#app')
