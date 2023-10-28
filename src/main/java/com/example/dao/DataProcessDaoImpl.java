@@ -1,5 +1,5 @@
 //DataProcessDaoImpl
-package com.example.ai_visual.dao;
+package com.example.dao;
 
 
 import org.springframework.stereotype.Service;

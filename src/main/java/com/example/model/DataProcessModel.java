@@ -1,6 +1,6 @@
 // DataProcessModel.java
 
-package com.example.ai_visual.model;
+package com.example.model;
 
 public class DataProcessModel {
     private int id;

@@ -1,4 +1,4 @@
-package com.example.ai_visual.model;
+package com.example.model;
 
 public class DataSourceModel {
     private int id;

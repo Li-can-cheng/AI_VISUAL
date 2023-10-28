@@ -1,6 +1,6 @@
-package com.example.ai_visual.dao;
+package com.example.dao;
 
-import com.example.ai_visual.model.DataSourceModel;
+import com.example.model.DataSourceModel;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

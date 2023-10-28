@@ -1,5 +1,5 @@
 //DataProcessDao
-package com.example.ai_visual.dao;
+package com.example.dao;
 
 public interface DataProcessDao {
     // 同样的 CRUD 操作
