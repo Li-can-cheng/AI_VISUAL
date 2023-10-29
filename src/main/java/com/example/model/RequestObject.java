@@ -1,6 +1,6 @@
 package com.example.model;
 
-public class YourRequestObject
+public class RequestObject
 {
     private String someField;
 
