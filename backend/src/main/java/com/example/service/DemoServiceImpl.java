@@ -25,18 +25,26 @@ public class DemoServiceImpl implements DemoService {
     private MultipartFile file;
     private String filename;
 
-
+    //预处理
     public void preprocessData() {
 
     }
 
+    //训练模型
     public void trainModel() {
-        String apiUrl = "http://127.0.0.1:8000/train"; // 替换为Python服务端API的真实URL
+        // Python服务端API的URL
+        String apiUrl = "http://127.0.0.1:8000/train";
+
+        //创建请求对象,该对象里一般是存着请求的参数
         RequestObject requestBody = new RequestObject();
-        requestBody.setValue("value");
+
+        //设置请求参数value值为my_value
+        requestBody.setValue("my_value");
+
         //看看自己发了啥子字段
         System.out.println(requestBody.getValue());
-        //万事俱备，post请求发送一个json到训练api
+
+        //万事俱备，post请求发送一个json到训练api（接受转换成String类）
         ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestBody, String.class);
 
         //处理响应
@@ -47,21 +55,25 @@ public class DemoServiceImpl implements DemoService {
         }
     }
 
+    //模型评估
     public double evaluateModel() {
-
         return 0;
     }
 
+    //预测图片
     public String predict(int imageId) {
         String url = "http://127.0.0.1:8000/predict/";
-        double[][] my2DArray = readAndConvertImage(imageId);  // 用你的实际方法替换这个
+        double[][] my2DArray = readAndConvertImage(imageId);  //使用一个函数将图片转换成二维数组
 
         Map<String, Object> map = new HashMap<>();
+        //请求参数
         map.put("data", my2DArray);
 
+        //请求头
         HttpHeaders headers = new HttpHeaders();
+        //json类型
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+        //
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(map, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
@@ -71,7 +83,7 @@ public class DemoServiceImpl implements DemoService {
 
     public double[][] readAndConvertImage(int imageId) {
         // 根据 imageId 从某个路径读取图片，这里假设图片名是 imageId.jpg
-        //TODO:改一下绝对路径
+        //TODO:绝对路径改成相对路径
         String imagePath = "S:\\myJAVA\\Visual-AI-Model-Development-Platform\\upload\\" + imageId + ".jpg";
         System.out.println(imagePath);
 

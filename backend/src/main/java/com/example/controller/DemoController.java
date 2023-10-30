@@ -17,7 +17,10 @@ import java.util.Map;
 @RestController
 public class DemoController {
 
+    //一个静态的用于上传文件的文件夹路径
     public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + File.separator + "upload";
+
+    //一个demo服务
     @Autowired
     private DemoServiceImpl demoService;
 
@@ -26,21 +29,24 @@ public class DemoController {
     @PostMapping("/upload")
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file) {
         Map<String, Object> response = new HashMap<>();
-
+        //一个文件对象，以路径构造
         File dir = new File(UPLOAD_DIRECTORY);
+        //不存在文件夹就自动创建，避免错误。
         if (!dir.exists()) {
             dir.mkdirs();
         }
         try {
             String fileName = file.getOriginalFilename();
             File targetFile = new File(UPLOAD_DIRECTORY + File.separator + fileName);
-            file.transferTo(targetFile);
+            file.transferTo(targetFile);//移动文件到指定路径
 
             response.put("message", "文件上传成功！");
             response.put("fileName", fileName);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+            //任何异常
             response.put("message", "文件上传失败！");
             response.put("error", e.getMessage());
 
@@ -57,6 +63,7 @@ public class DemoController {
 
     //预测模型
     @PostMapping("/predict")
+    //@RequestBody :请求体注释
     public String predict(@RequestBody Map<String, Object> request) {
         int imgid = (Integer) request.get("imgid");
         String predict_result = demoService.predict(imgid);
