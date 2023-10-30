@@ -80,5 +80,92 @@
     Response from model: {"result":4}
     ```
 
-4. 
+
+
+## 10-31凌晨
+
+##### Y_fileinfo——model
+
+一个文件对象，包含要传递的参数。
+
+```java
+package com.example.model;
+
+public class Y_fileInfo {
+    private String path;
+    private String name;
+    private String type;
+    private String id;
+    private String user;
+    private long size;
+    //getters and setters
+}
+```
+
+
+
+###### Y_ctl
+
+get访问/1实现传参，手动填充参数。
+
+```java
+package com.example.controller;
+
+import com.example.model.Y_fileInfo;
+import com.example.service.Y_serv;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController  // 注解是必需的，以便Spring Boot识别它为一个REST控制器
+public class Y_ctl {
+
+    @Autowired
+    private Y_serv serv;
+
+    @GetMapping("/1")
+    public String hello() {
+        Y_fileInfo fileInfo = new Y_fileInfo();  
+        // 不能在类的属性部分执行逻辑操作
+        
+        fileInfo.setPath("1");
+        fileInfo.setName("your_file_name");
+        fileInfo.setType("your_file_type");
+        fileInfo.setId("your_file_id");
+        fileInfo.setUser("your_user_id");
+        fileInfo.setSize(1); 
+        // 注意这里应和Y_fileInfo里的setSize接受的参数类型一致
+
+        serv.task1(fileInfo);  // 将fileInfo对象作为参数传递
+        return "Successfully!";
+    }
+}
+
+
+```
+
+
+
+###### Y_serv
+
+传参操作
+
+```java
+package com.example.service;
+import com.example.model.Y_fileInfo;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class Y_serv {
+
+    public static void task1(Y_fileInfo fileInfo) {
+        RestTemplate restTemplate = new RestTemplate();
+        String pythonApiUrl = "http://127.0.0.1:8000/hi";
+        restTemplate.postForObject(pythonApiUrl, fileInfo, String.class);
+    }
+
+}
+
+```
 
