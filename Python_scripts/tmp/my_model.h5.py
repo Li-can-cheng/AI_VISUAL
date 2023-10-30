@@ -22,7 +22,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # 训练模型
-model.fit(train_images, train_labels, epochs=5)
+model.fit(train_images, train_labels, epochs=10)
 
 # 保存模型
 model.save('my_model.h5')
