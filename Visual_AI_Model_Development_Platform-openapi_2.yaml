@@ -1,0 +1,87 @@
+openapi: "3.0.3"
+info:
+  title: "Visual_AI_Model_Development_Platform API"
+  description: "Visual_AI_Model_Development_Platform API"
+  version: "1.0.0"
+servers:
+  - url: "https://Visual_AI_Model_Development_Platform"
+paths:
+  /register:
+    post:
+      summary: "POST register"
+      operationId: "register"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /hello:
+    get:
+      summary: "GET hello"
+      operationId: "hello"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /invokeModel:
+    get:
+      summary: "GET invokeModel"
+      operationId: "invokeModel"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /upload:
+    post:
+      summary: "POST upload"
+      operationId: "uploadFile"
+      parameters:
+        - name: "file"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "binary"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /train:
+    post:
+      summary: "POST train"
+      operationId: "trainModel"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /predict:
+    post:
+      summary: "POST predict"
+      operationId: "predict"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "string"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
