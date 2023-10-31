@@ -14,3 +14,43 @@ class JsonInfo(BaseModel):
     function: list
     arguments: list
 ```
+
+测试的时候遇到一个问题
+
+```json
+{
+    detail": "Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl."
+}
+```
+
+进入conda环境，
+
+```bash
+conda install openpyxl
+```
+
+##### total_execution.py
+
+希望java后端发送的东西
+
+###### post /execute
+
+```json
+{
+    "commands": [
+        {
+            "module": "import_data",
+            "function": "import_excel_data",
+            "arguments": ["file_path.xlsx", "Sheet1"]
+        },
+        {
+            "module": "data_preprocessing",
+            "function": "process_data",
+            "arguments": [2]
+        }
+    ]
+}
+```
+
+
+

@@ -5,6 +5,19 @@ from sklearn.impute import KNNImputer
 import jieba
 import cv2
 
+
+def process_data(data, multiply_factor: int):
+    try:
+        data = data.astype(int)  # 尝试将所有列转换为 float 类型
+    except ValueError as e:
+        return str(e)  # 或者你可以选择抛出一个异常
+
+    processed_data = data *int(multiply_factor)
+    return processed_data
+
+
+
+
 def handle_missing_values1(data):
     """
     填充或删除数据中的缺失值
