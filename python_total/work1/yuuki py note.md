@@ -131,3 +131,48 @@ if not data_total.empty and func_name != 'request_train':
 ```
 
 效果还是不错的，于是成功调用train进行训练。
+
+
+
+这里是读数据+训练+预测
+
+```json
+{
+  "commands": [
+    {
+      "module": "import_data",
+      "functions": [
+        {
+          "name": "import_excel_data",
+          "arguments": {
+            "file_path": "file_path.xlsx",
+            "sheet_name": "Sheet1"
+          }
+        }
+      ]
+    },
+    {
+      "module":"train",
+      "functions":[
+        {
+          "name":"request_train",
+          "arguments":{
+            "input_epochs":1
+          }
+        }
+      ]
+    },
+    {
+      "module":"predict",
+      "functions":[
+        {
+          "name":"predict",
+          "arguments":{
+          }
+        }
+      ]
+    }
+  ]
+  }
+```
+
