@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-def request_train(input_epochs):
+def handwriting_train(input_epochs):
     # 加载MNIST数据集
     mnist = tf.keras.datasets.mnist
     (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
