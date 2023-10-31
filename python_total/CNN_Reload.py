@@ -43,7 +43,7 @@ testloader = DataLoader(testset, batch_size=64, shuffle=False)
 model = CNN()
 
 # 加载保存的模型权重
-path = 'model.pt'
+path = 'model.pth'
 state_dict = torch.load(path)
 
 # 将权重参数加载到模型中
