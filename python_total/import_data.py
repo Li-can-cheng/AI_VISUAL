@@ -14,7 +14,7 @@ def import_csv_data(file_path):
     data = pd.read_csv(file_path)
     return data
 
-def import_excel_data(file_path, sheet_name=None):
+def import_excel_data(file_path, sheet_name):
     """
     从本地Excel文件导入数据并返回DataFrame对象
 
@@ -39,5 +39,5 @@ def read_image(image_path):
     image (numpy.ndarray): 图片的灰度矩阵
     """
 
-    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    image = pd.DataFrame(cv2.imread(image_path, cv2.IMREAD_GRAYSCALE))
     return image
