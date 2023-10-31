@@ -1,4 +1,8 @@
 ### 发送文件
+- 请求地址
+  ```
+  http://localhost:8080/file
+  ```
 - 请求头
   ```
   Content-Type:data-form
