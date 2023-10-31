@@ -4,3 +4,9 @@ spring:
     multipart:
       max-file-size: 10MB  		# 设置单个文件最大大小为10MB
       max-request-size: 100MB  	# 设置多个文件大小为100MB
+
+
+#文件上传的配置文件
+FileInput:
+  BaseDirectory: Upload
+
