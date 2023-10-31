@@ -13,7 +13,7 @@ public class InfoPostController {
     private Person person;
 
     @PostMapping("/sendPerson")
-    public String getPersonInfo(@RequestBody Person person){
+    public String getPersonInfo(@ModelAttribute Person person){
         Gson gson = new Gson();
         System.out.println(gson.toJson(person));
         return gson.toJson(person);
