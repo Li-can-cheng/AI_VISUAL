@@ -39,15 +39,25 @@ testset = datasets.MNIST(root='./data', train=False,
                          download=True, transform=transform)
 testloader = DataLoader(testset, batch_size=64, shuffle=False)
 
+# 假设你已经定义了一个卷积神经网络模型
+model = CNN()
+
+# 加载保存的模型权重
+path = 'model.pt'
+state_dict = torch.load(path)
+
+# 将权重参数加载到模型中
+model.load_state_dict(state_dict)
+
 # 参数提取lr momentum num_epochs
 lr = 0.001
 momentum = 0.9
 num_epochs = 1
 
 # 创建模型实例、定义损失函数和优化器
-net = CNN()
+# net = CNN()
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr, momentum)
+optimizer = optim.SGD(model.parameters(), lr, momentum)
 
 # 训练模型
 # num_epochs = 10
@@ -57,7 +67,7 @@ for epoch in range(num_epochs):
     total = 0
     for i, (inputs, labels) in enumerate(trainloader):
         optimizer.zero_grad()
-        outputs = net(inputs)
+        outputs = model(inputs)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -74,13 +84,3 @@ for epoch in range(num_epochs):
             
     accuracy = 100.0 * correct / total
     print(f"Accuracy on epoch {epoch+1}: {accuracy}%")
-
-# # 输出各层的权重
-# for name, parameters in net.named_parameters():
-#     print(name, ':', parameters.size())
-
-# save model
-path = 'model.pth'
-torch.save(net.state_dict(), path)
-
-
