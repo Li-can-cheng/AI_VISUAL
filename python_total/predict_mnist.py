@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from PIL import Image
 
+
 # 读取、调整尺寸和转换灰度
 image = Image.open('AI_Sync\\Visual-AI-Model-Development-Platform\\upload\\4.jpg')  # 替换为实际的图片路径
 image = image.resize((28, 28))  # 调整为MNIST数据集的图片尺寸，28x28
