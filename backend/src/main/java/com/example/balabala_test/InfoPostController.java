@@ -1,5 +1,6 @@
 package com.example.balabala_test;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,9 @@ public class InfoPostController {
 
     @PostMapping("/sendPerson")
     public String getPersonInfo(@RequestBody Person person){
-        return person.toString();
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(person));
+        return gson.toJson(person);
     }
 
 }
