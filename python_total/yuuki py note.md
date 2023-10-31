@@ -49,6 +49,17 @@ conda install openpyxl
           }
         }
       ]
+    },
+    {
+      "module": "data_preprocessing",
+      "functions": [
+        {
+          "name": "process_data",
+          "arguments": {
+            "multiply_factor":2
+          }
+        }
+      ]
     }
   ]
 }
