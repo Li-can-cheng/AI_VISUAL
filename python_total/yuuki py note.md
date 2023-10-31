@@ -37,19 +37,22 @@ conda install openpyxl
 
 ```json
 {
-    "commands": [
+  "commands": [
+    {
+      "module": "import_data",
+      "functions": [
         {
-            "module": "import_data",
-            "function": "import_excel_data",
-            "arguments": ["file_path.xlsx", "Sheet1"]
-        },
-        {
-            "module": "data_preprocessing",
-            "function": "process_data",
-            "arguments": [2]
+          "name": "import_excel_data",
+          "arguments": {
+            "file_path": "file_path.xlsx",
+            "sheet_name": "Sheet1"
+          }
         }
-    ]
+      ]
+    }
+  ]
 }
+
 ```
 
 

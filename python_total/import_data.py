@@ -14,7 +14,7 @@ def import_csv_data(file_path):
     data = pd.read_csv(file_path)
     return data
 
-def import_excel_data(file_path, sheet_name):
+def import_excel_data(file_path, sheet_name=None):
     """
     从本地Excel文件导入数据并返回DataFrame对象
 

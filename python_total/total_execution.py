@@ -1,15 +1,22 @@
 import importlib
-from fastapi import FastAPI, HTTPException, APIRouter
+from typing import Any
+import pandas as pd
+from fastapi import HTTPException, APIRouter
 from pydantic import BaseModel
-from typing import List, Union
 
 router = APIRouter()
+
+from typing import List, Dict
+
+
+class Function(BaseModel):
+    name: str
+    arguments: Dict[str, Any]
 
 
 class Command(BaseModel):
     module: str
-    function: str
-    arguments: List[Union[str, int]]  # 修改以接受字符串和整数参数
+    functions: List[Function]  # functions现在是一个Function对象的列表
 
 
 class JsonInfo(BaseModel):
@@ -18,36 +25,55 @@ class JsonInfo(BaseModel):
 
 @router.post("/execute")
 async def execute(json_info: JsonInfo):
-    data_total = None  # 初始化数据
+    data_total = pd.DataFrame()  # 初始化为空的 DataFrame
 
     for command in json_info.commands:
         mod = command.module
-        func = command.function
-        args = command.arguments
 
-        # 如果 data_total 不是 None，将它添加到参数列表的开始
-        if data_total is not None:
-            args.insert(0, data_total)
+        for function in command.functions:
+            func_name = function.name
+            args = function.arguments  # args是一个字典
 
-        # 从字符串导入模块
-        try:
-            imported_module = importlib.import_module(mod)
-        except ImportError:
-            raise HTTPException(status_code=400, detail=f"Module {mod} not found")
+            # 如果 data 不是 DataFrame，尝试将其转换为 DataFrame
+            if 'data' in args and not isinstance(args['data'], pd.DataFrame):
+                try:
+                    args['data'] = pd.DataFrame(args['data'])
+                except ValueError as e:
+                    raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
 
-        # 从模块获取函数
-        try:
-            function_to_call = getattr(imported_module, func)
-        except AttributeError:
-            raise HTTPException(status_code=400, detail=f"Function {func} not found in module {mod}")
+            # 如果 data_total 有数据，将其传递给下一个函数
+            if not data_total.empty:
+                args['data'] = data_total
 
-        # 调用函数
-        try:
-            data_total = function_to_call(*args)  # 更新迭代后的数据
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=str(e))
+            # 导入模块
+            try:
+                imported_module = importlib.import_module(mod)
+            except ImportError as e:
+                raise HTTPException(status_code=400, detail=f"Module {mod} not found: {str(e)}")
 
-    return {"status": "success", "data": data_total.to_dict() if data_total is not None else None}
+            # 获取函数
+            try:
+                function_to_call = getattr(imported_module, func_name)
+            except AttributeError as e:
+                raise HTTPException(status_code=400, detail=f"Function {func_name} not found in module {mod}: {str(e)}")
+
+            # 调用函数
+            try:
+                data_total = function_to_call(**args)
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Error calling function {func_name} with args {args}: {str(e)}")
+
+            # 确保 data_total 是 DataFrame 类型
+            if not isinstance(data_total, pd.DataFrame):
+                try:
+                    data_total = pd.DataFrame(data_total)
+                except ValueError as e:
+                    raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
+
+    return {"status": "success", "data": data_total.to_dict(orient='records')}
+
+
+
 
 #
 # # 大概的json格式
