@@ -155,7 +155,7 @@ if not data_total.empty and func_name != 'request_train':
       "module":"train",
       "functions":[
         {
-          "name":"request_train",
+          "name":"handwriting_train",
           "arguments":{
             "input_epochs":1
           }
@@ -166,7 +166,7 @@ if not data_total.empty and func_name != 'request_train':
       "module":"predict",
       "functions":[
         {
-          "name":"predict",
+          "name":"handwriting_predict",
           "arguments":{
           }
         }
