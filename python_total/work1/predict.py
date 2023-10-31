@@ -2,7 +2,7 @@ from tensorflow.keras.models import load_model
 import cv2
 
 
-def predictit():
+def handwriting_predict():
     # 读取上传的文件
     model = load_model("S:\\myJAVA\\Visual-AI-Model-Development-Platform\\python_total\\work1\\my_model.h5")
     uploaded_file = cv2.imread("S:\\myJAVA\\Visual-AI-Model-Development-Platform\\upload\\4.jpg")

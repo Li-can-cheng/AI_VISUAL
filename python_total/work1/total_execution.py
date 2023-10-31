@@ -7,16 +7,20 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
+
 class Function(BaseModel):
     name: str
     arguments: Dict[str, Any]
+
 
 class Command(BaseModel):
     module: str
     functions: List[Function]
 
+
 class JsonInfo(BaseModel):
     commands: List[Command]
+
 
 @router.post("/execute")
 async def execute(json_info: JsonInfo):
@@ -34,7 +38,6 @@ async def execute(json_info: JsonInfo):
                     args['data'] = pd.DataFrame(args['data'])
                 except ValueError as e:
                     raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
-
 
             if not data_total.empty and func_name != ('request_train' or 'predict'):
                 args['data'] = data_total
@@ -66,7 +69,6 @@ async def execute(json_info: JsonInfo):
                     raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
 
     return {"status": "success", "data": data_total.to_dict(orient='records')}
-
 
 #
 # # 大概的json格式

@@ -6,7 +6,7 @@ import jieba
 import cv2
 
 
-def process_data(data, multiply_factor: int):
+def multiply(data, multiply_factor: int):
     try:
         data = data.astype(int)  # 尝试将所有列转换为 int 类型
     except ValueError as e:

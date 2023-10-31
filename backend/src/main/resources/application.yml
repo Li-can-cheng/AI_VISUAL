@@ -6,7 +6,5 @@ spring:
       max-request-size: 100MB  	# 设置多个文件大小为100MB
 
 
-#文件上传的配置文件
-FileInput:
-  BaseDirectory: Upload
+
 
