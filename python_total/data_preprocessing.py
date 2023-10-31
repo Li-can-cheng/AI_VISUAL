@@ -7,16 +7,13 @@ import cv2
 
 
 def process_data(data, multiply_factor: int):
-
     try:
-        data = data.astype(int)  # 尝试将所有列转换为 float 类型
+        data = data.astype(int)  # 尝试将所有列转换为 int 类型
     except ValueError as e:
         return str(e)  # 或者你可以选择抛出一个异常
 
-    processed_data = data *int(multiply_factor)
+    processed_data = data * int(multiply_factor)  # 防止爆炸
     return processed_data
-
-
 
 
 def handle_missing_values1(data):
@@ -36,6 +33,7 @@ def handle_missing_values1(data):
     cleaned_data = data.fillna(method='ffill').dropna()
 
     return cleaned_data
+
 
 def handle_missing_values2(data):
     """
@@ -59,6 +57,7 @@ def handle_missing_values2(data):
     cleaned_data = pd.DataFrame(filled_data, columns=data.columns)
 
     return cleaned_data
+
 
 def handle_outliers1(data, method='z-score', threshold=3):
     """
@@ -85,6 +84,7 @@ def handle_outliers1(data, method='z-score', threshold=3):
 
     return cleaned_data
 
+
 def handle_outliers2(data, method='mean', threshold=3):
     """
     处理数据中的异常值
@@ -109,6 +109,7 @@ def handle_outliers2(data, method='mean', threshold=3):
 
     return cleaned_data
 
+
 def filter_data(data, condition):
     """
     根据条件筛选数据
@@ -122,6 +123,7 @@ def filter_data(data, condition):
     """
     filtered_data = data.query(condition)
     return filtered_data
+
 
 def modify_data(data, operation, new_data=None):
     """
@@ -144,6 +146,7 @@ def modify_data(data, operation, new_data=None):
 
     return modified_data
 
+
 def merge_data(data1, data2, on=None):
     """
     合并数据
@@ -158,6 +161,7 @@ def merge_data(data1, data2, on=None):
     """
     merged_data = pd.merge(data1, data2, on=on)
     return merged_data
+
 
 def split_dataset(data, test_size=0.2, random_state=None):
     """
@@ -175,6 +179,7 @@ def split_dataset(data, test_size=0.2, random_state=None):
     train_data, test_data = train_test_split(data, test_size=test_size, random_state=random_state)
     return train_data, test_data
 
+
 def tokenize_text(text):
     """
     对文本进行分词
@@ -187,6 +192,7 @@ def tokenize_text(text):
     """
     tokens = jieba.lcut(text)
     return tokens
+
 
 def segment_image(image_path):
     """
@@ -204,6 +210,7 @@ def segment_image(image_path):
 
     return segmented_image
 
+
 def convert_to_gray(image_path):
     """
     将图像转换为灰度图像
@@ -218,4 +225,3 @@ def convert_to_gray(image_path):
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     return gray_image
-

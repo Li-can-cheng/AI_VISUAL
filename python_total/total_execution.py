@@ -61,7 +61,8 @@ async def execute(json_info: JsonInfo):
             try:
                 data_total = function_to_call(**args)
             except Exception as e:
-                raise HTTPException(status_code=400, detail=f"Error calling function {func_name} with args {args}: {str(e)}")
+                raise HTTPException(status_code=400,
+                                    detail=f"Error calling function {func_name} with args {args}: {str(e)}")
 
             # 确保 data_total 是 DataFrame 类型
             if not isinstance(data_total, pd.DataFrame):
@@ -71,9 +72,6 @@ async def execute(json_info: JsonInfo):
                     raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
 
     return {"status": "success", "data": data_total.to_dict(orient='records')}
-
-
-
 
 #
 # # 大概的json格式
