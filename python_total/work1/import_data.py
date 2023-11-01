@@ -25,7 +25,7 @@ def import_excel_data(file_path, sheet_name=None):
     返回：
     data (pandas.DataFrame): 读取的Excel文件数据的DataFrame对象
     """
-    data = pd.read_excel(file_path, sheet_name=sheet_name)
+    data = pd.read_excel('uploads\\'+file_path, sheet_name=sheet_name)
     return data
 
 def read_image(image_path):

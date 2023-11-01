@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 def handwriting_train(input_epochs):
     # 加载MNIST数据集
     mnist = tf.keras.datasets.mnist

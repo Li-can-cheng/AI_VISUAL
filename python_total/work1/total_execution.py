@@ -8,6 +8,7 @@ from pydantic import BaseModel
 router = APIRouter()
 
 
+
 class Function(BaseModel):
     name: str
     arguments: Dict[str, Any]
@@ -22,10 +23,12 @@ class JsonInfo(BaseModel):
     commands: List[Command]
 
 
+data_total = pd.DataFrame()
+
+
 @router.post("/execute")
 async def execute(json_info: JsonInfo):
-    data_total = pd.DataFrame()
-
+    global data_total
     for command in json_info.commands:
         mod = command.module
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据导入与机器学习操作界面</title>
+    <!-- 引入样式表和JavaScript -->
+    <link rel="stylesheet" href="hello1.css">
+</head>
+<body>
+<h1>欢迎使用数据导入与机器学习操作界面</h1>
+
+<div>
+    <h2>导入数据</h2>
+    <input type="file" id="fileInput" accept=".xlsx" />
+<!--    <input type="text" id="sheetNameInput" placeholder="输入Sheet名" />-->
+    <button id="importButton">导入数据</button>
+</div>
+
+<div>
+    <h2>读取数据</h2>
+    <button id="readDataButton">读取</button>
+</div>
+
+
+<div>
+    <h2>数据预处理</h2>
+    <form id="preprocess_form" action="/submit" method="post">
+        <label for="multiply_box">
+            <input type="checkbox" id="multiply_box" name="funcs[]" value="multiply"> multiply
+        </label><br>
+        <label for="multiply_factor_input">
+            Multiply Factor: <input type="number" id="multiply_factor_input" name="multiply_factor" value="1" min="1">
+        </label><br>
+        <input type="button" id="process_button" value="提交">
+    </form>
+</div>
+
+
+<div>
+    <h2>训练配置</h2>
+    <epochs>epochs</br></epochs>
+    <input type="number" id="epochInput" placeholder="输入训练次数" />
+    <button id="trainButton">开始训练</button>
+</div>
+
+<div>
+    <h2>执行预测</h2>
+    <button id="predictButton">开始预测</button>
+</div>
+
+
+
+<div id="log-container">
+    <h2>状态信息</h2>
+    <textarea id="log" rows="10" cols="50" readonly></textarea>
+</div>
+<!-- 你可以在这里添加JavaScript脚本来处理事件 -->
+<script src="script.js"></script>
+</body>
+</html>
