@@ -176,3 +176,8 @@ if not data_total.empty and func_name != 'request_train':
   }
 ```
 
+
+
+# 11-01
+
+跑通。
