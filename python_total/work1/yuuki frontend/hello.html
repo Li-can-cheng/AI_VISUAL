@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件浏览器</title>
+<style>
+  /* 基本样式 */
+  #files {
+    list-style-type: none;
+    padding: 0;
+  }
+  .file-item {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .directory {
+    font-weight: bold;
+  }
+  #path {
+    margin-bottom: 10px;
+  }
+  #loading {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<h1>文件浏览器</h1>
+<div id="path"></div>
+<div id="loading">加载中...</div>
+<ul id="files"></ul> <!-- 文件将在这个无序列表中显示 -->
+<script>
+  // 确保文档加载完毕后执行
+  document.addEventListener('DOMContentLoaded', function() {
+    let currentPath = 'extracted_files';
+
+    function displayLoading(show) {
+      document.getElementById('loading').style.display = show ? 'block' : 'none';
+    }
+
+    // 请求并显示文件夹内容的函数
+    function fetchFiles(path) {
+      displayLoading(true);
+      fetch(`http://127.0.0.1:8000/files/${path}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('网络请求错误');
+          }
+          return response.json();
+        })
+        .then(data => {
+          displayLoading(false);
+          if (data.error) {
+            alert(data.error);
+          } else {
+            displayFiles(data, path);
+          }
+        })
+        .catch(error => {
+          displayLoading(false);
+          alert('Error:' + error.message);
+        });
+    }
+
+    // 显示文件和文件夹的函数
+    function displayFiles(files, path) {
+      const filesList = document.getElementById('files');
+      const pathDisplay = document.getElementById('path');
+      pathDisplay.textContent = `当前路径：${path}`;
+      currentPath = path;
+
+      // 清空当前的文件列表
+      filesList.innerHTML = '';
+
+      // 添加返回上级目录的选项
+      if (path !== 'extracted_files') {
+        const upOneLevel = document.createElement('li');
+        upOneLevel.textContent = '[返回上级目录]';
+        upOneLevel.onclick = () => {
+          const upPath = path.substring(0, path.lastIndexOf('/'));
+          fetchFiles(upPath);
+        };
+        filesList.appendChild(upOneLevel);
+      }
+
+      // 为每个文件/文件夹创建一个列表项
+      files.forEach(file => {
+        const fileItem = document.createElement('li');
+        fileItem.classList.add('file-item');
+        if (file.is_directory) {
+          fileItem.classList.add('directory');
+          fileItem.textContent = `[目录] ${file.name}`;
+          // 如果是文件夹，点击时可以浏览它的内容
+          fileItem.onclick = () => fetchFiles(`${path}/${file.name}`);
+        } else {
+          fileItem.textContent = file.name;
+        }
+        filesList.appendChild(fileItem);
+      });
+    }
+
+    // 初始加载根目录
+    fetchFiles('S:\\myJAVA\\Visual-AI-Model-Development-Platform\\python_total\\work1\\extracted_files');
+  });
+</script>
+</body>
+</html>
