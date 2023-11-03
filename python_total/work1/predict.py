@@ -1,26 +1,43 @@
-from tensorflow.keras.models import load_model
-import cv2
+import string
+
+import torch
+from torchvision import transforms
+from PIL import Image
+from train import MNISTModel
+
+model_path = 'my_pytorch_model.pt'
 
 
-def handwriting_predict():
-    # 读取上传的文件
-    model = load_model("S:\\myJAVA\\Visual-AI-Model-Development-Platform\\python_total\\work1\\my_model.h5")
-    uploaded_file = cv2.imread("S:\\myJAVA\\Visual-AI-Model-Development-Platform\\upload\\4.jpg")
-    if uploaded_file is None:
-        raise ValueError("图像加载失败，请检查文件路径是否正确")
+def handwriting_predict(image_path: string):
+    print(image_path)
+    # 设置设备
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # 转换图像为灰度图
-    gray_img = cv2.cvtColor(uploaded_file, cv2.COLOR_BGR2GRAY)
+    # 图片转换操作应与训练时相同
+    transform = transforms.Compose([
+        transforms.Grayscale(num_output_channels=1),
+        transforms.Resize((28, 28)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+    ])
 
-    # 将图像缩放到28x28像素
-    resized_img = cv2.resize(gray_img, (28, 28))
+    # 加载图像
+    image = Image.open(image_path)
+    image = transform(image).unsqueeze(0).to(device)  # 增加一个批次维度并转移到设备上
 
-    # 调整图像的形状以符合模型的输入要求
-    ready_array = resized_img.reshape(1, 28, 28)
+    # 加载模型
+    model = MNISTModel().to(device)
+    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.eval()  # 切换到预测模式
 
-    # 使用模型进行预测
-    prediction = model.predict(ready_array).argmax()
+    # 预测
+    with torch.no_grad():
+        output = model(image)
+        prediction = output.argmax(dim=1, keepdim=True)  # 获取最可能的结果
 
-    # 返回预测结果
-    return {"result": [int(prediction)]}
+    return prediction.item()
 
+
+if __name__ == "__main__":
+    predict_result = handwriting_predict('uploads\\4.jpg')
+    print(f'Predicted class: {predict_result}')

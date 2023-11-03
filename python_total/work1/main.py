@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from total_execution import router as good_router
 from upload import router as upload_router
-
+from file_service import router as file_service
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,6 +16,7 @@ app = FastAPI()
 
 app.include_router(good_router)
 app.include_router(upload_router)
+app.include_router(file_service)
 
 # 设置允许的跨源请求的源列表——不然访问个der
 # 你可以使用通配符 "*" 来允许所有源，或者使用具体的源列表

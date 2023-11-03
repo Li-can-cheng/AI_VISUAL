@@ -28,50 +28,56 @@ data_total = pd.DataFrame()
 
 @router.post("/execute")
 async def execute(json_info: JsonInfo):
-    global data_total
+    global data_total  # 使用全局变量来存储累积的数据
+    results = []  # 用于存储每个函数调用的结果
+
     for command in json_info.commands:
         mod = command.module
+        try:
+            imported_module = importlib.import_module(mod)  # 导入模块
+        except ImportError as e:
+            raise HTTPException(status_code=400, detail=f"Module {mod} not found: {str(e)}")
 
         for function in command.functions:
             func_name = function.name
             args = function.arguments
 
+            # 如果参数中有'data'，并且其类型不是pd.DataFrame，则尝试将其转换
             if 'data' in args and not isinstance(args['data'], pd.DataFrame):
                 try:
                     args['data'] = pd.DataFrame(args['data'])
-                except ValueError as e:
-                    raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
+                except Exception as e:
+                    raise HTTPException(status_code=400, detail=f"Error converting 'data' to DataFrame: {str(e)}")
 
-            if not data_total.empty and func_name != ('request_train' or 'predict'):
+            # 如果data_total不为空，则将其作为'data'参数
+            if not data_total.empty and 'data' not in args:
                 args['data'] = data_total
 
             try:
-                imported_module = importlib.import_module(mod)
-            except ImportError as e:
-                raise HTTPException(status_code=400, detail=f"Module {mod} not found: {str(e)}")
-
-            try:
-                function_to_call = getattr(imported_module, func_name)
-            except AttributeError as e:
-                raise HTTPException(status_code=400, detail=f"Function {func_name} not found in module {mod}: {str(e)}")
-
-            # 获取函数的参数信息
-            sig = inspect.signature(function_to_call)
-            func_args = {k: args[k] for k in sig.parameters if k in args}
-
-            try:
-                data_total = function_to_call(**func_args)
+                function_to_call = getattr(imported_module, func_name)  # 获取模块中的函数
+                result = function_to_call(**args)  # 调用函数
+                results.append(result)  # 存储结果
+                if isinstance(result, pd.DataFrame):  # 如果结果是DataFrame，更新data_total
+                    data_total = result
             except Exception as e:
-                raise HTTPException(status_code=400,
-                                    detail=f"Error calling function {func_name} with args {func_args}: {str(e)}")
+                raise HTTPException(status_code=400, detail=f"Error calling function {func_name}: {str(e)}")
 
-            if not isinstance(data_total, pd.DataFrame):
-                try:
-                    data_total = pd.DataFrame(data_total)
-                except ValueError as e:
-                    raise HTTPException(status_code=400, detail=f"Error converting data to DataFrame: {str(e)}")
+    # 根据结果类型构建响应
+    if results:
+        if all(isinstance(res, pd.DataFrame) for res in results):
+            # 所有结果都是DataFrames，合并它们（如果有多个）
+            combined_df = pd.concat(results, ignore_index=True)
+            response_data = combined_df.to_dict(orient='records')
+        else:
+            # 结果类型不一，返回一个列表
+            response_data = [res.to_dict(orient='records') if isinstance(res, pd.DataFrame) else res for res in results]
+    else:
+        response_data = None
 
-    return {"status": "success", "data": data_total.to_dict(orient='records')}
+    return {"status": "success", "data": response_data}
+
+
+
 
 #
 # # 大概的json格式

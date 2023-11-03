@@ -1,30 +1,85 @@
-import tensorflow as tf
+from tqdm import tqdm
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader, random_split
+
+from work1 import settings
+
+dataset_path = settings.training_set_folder
+
+
+class MNISTModel(nn.Module):
+    def __init__(self):
+        super(MNISTModel, self).__init__()
+        self.flatten = nn.Flatten()
+        self.fc1 = nn.Linear(28 * 28, 128)
+        self.dropout = nn.Dropout(0.2)
+        self.fc2 = nn.Linear(128, 10)
+
+    def forward(self, x):
+        x = self.flatten(x)
+        x = F.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
 
 
 def handwriting_train(input_epochs):
-    # 加载MNIST数据集
-    mnist = tf.keras.datasets.mnist
-    (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+    # 设置PyTorch的device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = "cuda"
+    if device == "cuda":
+        print("Using GPU")
+    else:
+        print("Using CPU")
 
-    # 数据归一化
-    train_images = train_images / 255.0
-    test_images = test_images / 255.0
-
-    # 构建模型
-    model = tf.keras.Sequential([
-        tf.keras.layers.Flatten(input_shape=(28, 28)),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(10)
+    # 定义数据集的转换操作
+    transform = transforms.Compose([
+        transforms.Grayscale(num_output_channels=1),
+        transforms.Resize((28, 28)),  # 如果需要的话，调整图片大小
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
     ])
 
+    # 加载数据集
+    dataset = datasets.ImageFolder(root=dataset_path, transform=transform)
+
+    # 数据集分割
+    train_size = int(0.8 * len(dataset))  # 假设80%的数据用于训练
+    test_size = len(dataset) - train_size  # 剩余20%的数据用于测试
+    train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=True)
+
+    # 构建模型
+    model = MNISTModel().to(device)
+
     # 编译模型
-    model.compile(optimizer='adam',
-                  loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['accuracy'])
+    optimizer = optim.Adam(model.parameters())
+    loss_fn = nn.CrossEntropyLoss()
 
     # 训练模型
-    model.fit(train_images, train_labels, epochs=input_epochs)
+    model.train()
+    for epoch in range(input_epochs):
+        with tqdm(train_loader, unit="batch") as tepoch:
+            for data, target in tepoch:
+                tepoch.set_description(f"Epoch {epoch + 1}")
+                data, target = data.to(device), target.to(device)
+                optimizer.zero_grad()
+                output = model(data)
+                loss = loss_fn(output, target)
+                loss.backward()
+                optimizer.step()
+                tepoch.set_postfix(loss=loss.item())
 
     # 保存模型
-    model.save('my_model.h5')
+    torch.save(model.state_dict(), 'my_pytorch_model.pt')
+
+
+if __name__ == "__main__":
+    # 使用函数
+    handwriting_train(1)  # 训练epoch，并指定数据集路径
