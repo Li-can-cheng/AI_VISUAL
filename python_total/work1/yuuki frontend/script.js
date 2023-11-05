@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const process_button =document.getElementById('process_button');
     const multiply_factor_input = document.getElementById('multiply_factor_input');
     let tmpfile=null;
-    let total_data=null;
 
     // 更新日志的辅助函数
     function updateLog(message) {
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 导入数据的事件处理器
     importButton.addEventListener('click', function() {
         const file = fileInput.files[0];
-        tmpfile = file.name;
+        tmpfile = "uploads\\"+file.name;
         // const sheetName = sheetNameInput.value;
         // 错误处理
         if (!file) {
@@ -107,7 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 发送预测请求
         sendCommand("predict", [{
             name: "handwriting_predict",
-            arguments: {}
+            arguments: {
+                image_path: tmpfile
+            }
         }]);
     });
 
