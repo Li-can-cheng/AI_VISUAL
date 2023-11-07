@@ -2,7 +2,7 @@ import zipfile
 import cv2
 import numpy as np
 
-def extract_images_from_zip(zip_path):
+def import_zip_data(zip_path):
     """
     从ZIP文件中提取图像并将它们转换为灰度矩阵，同时记录每个图像对应的标签。
 
@@ -26,5 +26,5 @@ def extract_images_from_zip(zip_path):
                             img = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
                             images_list.append(img)
                             labels_list.append(label)
-
-    return images_list, labels_list
+    data = (images_list, labels_list)
+    return data

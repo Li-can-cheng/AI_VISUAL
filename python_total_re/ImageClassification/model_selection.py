@@ -76,7 +76,7 @@ def CNN_model(x_train, y_train, num_class, epoch=1, lr=0.001, batch_size=64):
 
     return model
 
-def train_mlp_model(x_train, y_train, json_config, epochs=5):
+def MLP(data, layer, epochs=5):
     """
     训练一个多层感知器模型。
 
@@ -84,7 +84,7 @@ def train_mlp_model(x_train, y_train, json_config, epochs=5):
     x_train (list): 存放多个灰度矩阵的列表。
     y_train (list): 存放对应于x_train中每个矩阵的标签的列表。
     epochs (int): 训练的轮数。
-    json_config (dict): 包含网络层配置的字典。
+    layer (dict): 包含网络层配置的字典。
 
     返回:
     model (CustomMLP): 经过训练的MLP模型。
@@ -95,6 +95,33 @@ def train_mlp_model(x_train, y_train, json_config, epochs=5):
     # epochs = 5
     # user_config = {'linear1': 128, 'sigmoid1': '', 'linear2': 64, 'ReLU1': '', 'linear3': 10}
     # trained_model = train_mlp_model(x_train, y_train, epochs, user_config)
+
+    def shuffle_images(data):
+        """
+        将图像列表和标签列表进行相同顺序的随机打乱
+
+        参数：
+        x_train (list): 包含图像数据的列表
+        y_train (list): 对应图像的标签列表
+
+        返回：
+        shuffled_x_train (list): 打乱顺序后的图像数据列表
+        shuffled_y_train (list): 打乱顺序后的标签列表
+        """
+        x_train, y_train = data  # 还原
+        combined = list(zip(x_train, y_train))
+
+        # Randomly shuffle the combined list in place
+        random.shuffle(combined)
+
+        shuffled_x_train, shuffled_y_train = zip(*combined)
+        data = (list(shuffled_x_train), list(shuffled_y_train))
+
+        return data
+
+    data = shuffle_images(data)  # 打乱
+
+    x_train, y_train = data  # 还原
 
     # 将灰度矩阵列表转换为向量
     x_train_tensors = [torch.tensor(matrix, dtype=torch.float32).view(-1) for matrix in x_train]
@@ -127,7 +154,7 @@ def train_mlp_model(x_train, y_train, json_config, epochs=5):
             return self.layers(x)
 
     # 实例化模型
-    model = CustomMLP(json_config, input_features)
+    model = CustomMLP(layer, input_features)
 
     # 定义损失函数和优化器
     criterion = nn.CrossEntropyLoss()

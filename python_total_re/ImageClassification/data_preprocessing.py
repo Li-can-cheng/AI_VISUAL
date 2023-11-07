@@ -2,28 +2,7 @@ import random
 import numpy as np
 import sys
 
-def shuffle_images(x_train, y_train):
-    """
-    将图像列表和标签列表进行相同顺序的随机打乱
-
-    参数：
-    x_train (list): 包含图像数据的列表
-    y_train (list): 对应图像的标签列表
-
-    返回：
-    shuffled_x_train (list): 打乱顺序后的图像数据列表
-    shuffled_y_train (list): 打乱顺序后的标签列表
-    """
-    combined = list(zip(x_train, y_train))
-
-    # Randomly shuffle the combined list in place
-    random.shuffle(combined)
-
-    shuffled_x_train, shuffled_y_train = zip(*combined)
-
-    return list(shuffled_x_train), list(shuffled_y_train)
-
-def standardize_images(images_list, labels_list, method='z_score'):
+def standardize_images(data, method='z_score'):
     """
     根据指定的方法对图像的灰度矩阵进行标准化处理
 
@@ -36,6 +15,7 @@ def standardize_images(images_list, labels_list, method='z_score'):
     standardized_images (list): 标准化后的灰度矩阵列表
     labels_list (list): 未改变的标签列表
     """
+    images_list, labels_list = data  # 还原
 
     if method not in ['z_score', 'mean_normalization', 'scale_to_unit_length']:
         raise ValueError(
@@ -65,7 +45,7 @@ def standardize_images(images_list, labels_list, method='z_score'):
 
     return standardized_images, labels_list
 
-def normalize_images(images_list, labels_list, method='min_max'):
+def normalize_images(data, method='min_max'):
     """
     根据指定的方法对图像的灰度矩阵进行归一化处理
 
@@ -78,6 +58,7 @@ def normalize_images(images_list, labels_list, method='min_max'):
     normalized_images (list): 归一化后的灰度矩阵列表
     labels_list (list): 未改变的标签列表
     """
+    images_list, labels_list = data  # 还原
 
     def min_max_normalization(image):
         return (image - np.min(image)) / (np.max(image) - np.min(image)) if np.max(image) != np.min(image) else image
@@ -104,4 +85,3 @@ def normalize_images(images_list, labels_list, method='min_max'):
     normalized_images = [normalization_function(img) for img in images_list]
 
     return normalized_images, labels_list
-
