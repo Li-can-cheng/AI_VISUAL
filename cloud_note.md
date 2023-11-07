@@ -21,7 +21,7 @@ task_total are as follows:
 #### Python流程: 
 - java端发送json到execution，其中这个json一共包含了数据读取、数据预处理、模型运行三大块，json的格式大致如下：
 
-![Alt text](55d2aab60724a0094fd0fae0f4afb79.jpg)
+![Alt text](image-1.png)
 
 - 对于每个模块中的json，如果json的键值对中存在空value值，那么函数应该使用默认参数。可以选择使用解字典的方式映射传入参数。即**dict传入参数，不过要先清洗字典，示例代码如下：
   
