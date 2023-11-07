@@ -18,9 +18,10 @@ def import_csv_data(file_path):
     if 'y' not in data.columns:
         raise ValueError("列'y'在文件中不存在，请检查所给表格文件哦")
         sys.exit(1)
+
     return data
 
-def import_excel_data(file_path, sheet_name):
+def import_excel_data(file_path):
     """
     从本地Excel文件导入数据并返回DataFrame对象
     若任务为聚类等无监督学习,那么读取的表格仅为DataFrame,没有y_train
@@ -28,15 +29,13 @@ def import_excel_data(file_path, sheet_name):
 
     参数：
     file_path (str): Excel文件的路径
-    sheet_name (str)(可选参数): Excel文件中要读取的工作表名称
 
     返回：
     data(DataFrame): 读取的Excel文件数据的DataFrame对象
     """
-    data = pd.read_excel(file_path, sheet_name=sheet_name)
+    data = pd.read_excel(file_path)
     if 'y' not in data.columns:
         raise ValueError("列'y'在文件中不存在，请检查所给表格文件哦")
         sys.exit(1)
 
     return data
-
