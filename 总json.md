@@ -1,27 +1,33 @@
-json_string ='''
+```json
 {
-    "task":["ImageClassification"],    
-    "import_data":["import_zip_data",
-    "handwriting_digits.zip"],
+    "task":"ImageClassification",    
+    "import_data":{
+        "file_path":"/upload/data.csv",
+        "file_type":"import_csv_data"
+    },
     "data_preprocessing":[
         {
             "name":"normalize_images",
-            "arguments":{
-                "mean":""
-            }
+            "arguments":""
         },
         {
             "name":"standardize_images",
-            "arguments":{
-                "mean":""
-            }    
+            "arguments":""
         }
     ],
     "model_selection":{
         "name":"MLP",
         "arguments":{
             "epoch":"",
-            "layer":{"linear1":256, "sigmoid1":"","linear2":128, "ReLU1":"", "linear3":10, "ReLU2":""}
+            "layer":{
+                "linear1":"256",
+                "sigmoid":"",
+                "ReLU1":"",
+                "linear2":"128",
+                "ReLU2":"",
+                "linear3":""
+            }
         }
     }
-}'''
+}
+```
