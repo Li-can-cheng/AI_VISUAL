@@ -1,7 +1,7 @@
 ### 发送文件
 - 请求地址
   ```
-  http://localhost:8080/file
+  http://localhost:8080/model/sendFile?task=ImageClassification
   ```
 - 请求头
   ```
@@ -9,10 +9,55 @@
   ```
 - 请求参数
   ```
-  //文件
   file:file.xsml
-  //用户的名称
   username:balabala
-  //只有xlsx后缀的文件才需要传
-  sheet_name:Sheet1
   ```
+### 发送文件预处理
+- 请求地址
+  ```
+  http://localhost:8080/model/send_data_processing
+  ```
+- 请求头
+  ```
+  Content-Type:json
+  ```
+- 请求参数
+  ```json
+  [
+    {
+      "name": "normalize_images",
+      "arguments": ""
+    },
+    {
+      "name": "standardize_images",
+      "arguments": ""
+    }
+  ]
+  ```
+### 发送模型
+- 请求地址
+  ```
+  http://localhost:8080/model/send_model_selection
+  ```
+- 请求头
+  ```
+  Content-Type:json
+  ```
+- 请求参数
+  ```json
+  {
+    "name":"MLP",
+    "arguments":{
+      "epoch":-1,
+      "layer":{
+        "linear1":256,
+        "sigmoid":-1,
+        "ReLU1":-1,
+        "linear2":128,
+        "ReLU2":-1,
+        "linear3":-1
+      }
+    }
+  }
+  ```
+- 没有选择的神经元的层数，默认值传-1
