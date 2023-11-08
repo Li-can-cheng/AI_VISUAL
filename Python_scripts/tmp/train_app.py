@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from fastapi import Body
 import subprocess
 
 router = APIRouter()
@@ -27,3 +28,4 @@ async def train_model(request: YourRequestObject):
         return {"message": f"Model trained successfully with field: {some_field}"}
     else:
         return {"message": "训练失败"}
+
