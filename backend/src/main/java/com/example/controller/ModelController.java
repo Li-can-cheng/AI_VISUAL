@@ -51,6 +51,12 @@ public class ModelController {
 //        }
         model.setModel_selection(model_selection);
 
+        return gson.toJson(model_selection);
+    }
+
+    @PostMapping("/model/send_model_evaluation")
+    public String acceptModelEvaluation(@RequestBody String[] model_evaluation){
+        model.setModel_evaluation(model_evaluation);
         // 创建RestTemplate实例
         RestTemplate restTemplate = new RestTemplate();
         // 设置请求头，指定JSON格式(MediaType.APPLICATION_JSON)
