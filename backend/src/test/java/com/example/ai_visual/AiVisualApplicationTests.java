@@ -2,6 +2,7 @@ package com.example.ai_visual;
 
 import com.example.balabalamodel3.AcceptData;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,6 +19,18 @@ class AiVisualApplicationTests {
     @Test
     public void contextLoads() {
         System.out.println(file);
+    }
+
+
+    @Autowired
+    private School school;
+    @Autowired
+    private Student student;
+    @Test
+    public void testPerson(){
+        student.setAge(1);
+        school.setPerson(student);
+        System.out.println(school);
     }
 
 }

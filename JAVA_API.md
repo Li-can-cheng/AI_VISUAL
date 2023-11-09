@@ -26,18 +26,22 @@
   [
     {
       "name": "normalize_images",
-      "arguments": ""
+      "arguments": {
+         "mean": ""
+      }
     },
     {
       "name": "standardize_images",
-      "arguments": ""
+      "arguments": {
+         "mean": ""
+      }
     }
   ]
   ```
 ### 发送模型
 - 请求地址
   ```
-  http://localhost:8080/model/send_model_selection
+  http://localhost:8080/model/MLP
   ```
 - 请求头
   ```

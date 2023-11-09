@@ -1,4 +1,4 @@
-package com.example.balabalamodel3;
+package com.example.ai_visual;
 
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @ToString
 @Component
-public class DataProcessing {
+public class Teacher implements Person{
     private String name;
-    private DataProcessingArgument arguments;
 }
