@@ -109,7 +109,7 @@
     <div class="designer">
         <div class="AI-model">
             <div class="panel-tab">
-                <p>AI模型列表</p>
+                <div class="panel-tab-title">AI模型列表</div>
             </div>
             <div class="panel-list">
                 <div class="col-2">
@@ -125,14 +125,12 @@
         </div>
         <div class="process-interface">
             <!-- 进度条 -->
-            <div class="progress-bar" style="height:40px;">
+            <div class="progress-bar" style="height:36px;">
                 <el-steps :active="active" finish-status="success" align-center>
                     <el-step title="Step1" />
                     <el-step title="Step2" />
                     <el-step title="Step3" />
-                    <el-step title="Step4" />
-                    <el-step title="Step5" />
-                    <el-button style="margin-top: 0px;width:80px;height:30px;" @click="next">Next step</el-button>
+                    <el-button style="margin-top: 0px;width:80px;height:30px;margin-left:-36px;margin-right:20px;" @click="next">Next step</el-button>
                 </el-steps>
             </div>
           <div class="col-3">
@@ -151,7 +149,7 @@
     </div>
     <div class="result">
         <div class="upload">
-            <p>上传文件</p>
+            <div class="upload-title">上传文件</div>
             <el-upload
                 v-model:file-list="fileList"
                 class="upload-demo"
@@ -210,6 +208,18 @@
     height: 100%;
     background-color: rgb(255, 255, 255);
 }
+.AI-model .panel-tab .panel-tab-title{
+    height: 30px;
+    width:100%;
+    line-height: 30px;
+    text-align: center;
+    font-size: 16px;
+    color:rgb(87, 87, 87);
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px rgb(121, 121, 121);
+    margin-bottom: 2px;       
+    background-color: rgb(193, 231, 219);  
+}
 .designer .process-interface{
     width:180%;
     height: 100%;
@@ -226,10 +236,21 @@
     display: flex;
     flex-direction: row;
 }
-.upload{
+.result .upload{
     width:70%;
     height: 100%;
     background-color: rgb(225, 250, 242);
+}
+.result .upload .upload-title{
+    height: 30px;
+    width:100%;
+    line-height: 30px;
+    text-align: center;
+    font-size: 16px;
+    color:rgb(87, 87, 87);
+    border-radius: 2px;
+    background-color: rgb(193, 231, 219);  
+    box-shadow: 0px 1px 2px rgb(121, 121, 121);
 }
 .model-parameter{
     width:180%;

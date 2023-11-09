@@ -96,31 +96,6 @@ def MLP(data, layer, epochs=5):
     # user_config = {'linear1': 128, 'sigmoid1': '', 'linear2': 64, 'ReLU1': '', 'linear3': 10}
     # trained_model = train_mlp_model(x_train, y_train, epochs, user_config)
 
-    def shuffle_images(data):
-        """
-        将图像列表和标签列表进行相同顺序的随机打乱
-
-        参数：
-        x_train (list): 包含图像数据的列表
-        y_train (list): 对应图像的标签列表
-
-        返回：
-        shuffled_x_train (list): 打乱顺序后的图像数据列表
-        shuffled_y_train (list): 打乱顺序后的标签列表
-        """
-        x_train, y_train = data  # 还原
-        combined = list(zip(x_train, y_train))
-
-        # Randomly shuffle the combined list in place
-        random.shuffle(combined)
-
-        shuffled_x_train, shuffled_y_train = zip(*combined)
-        data = (list(shuffled_x_train), list(shuffled_y_train))
-
-        return data
-
-    data = shuffle_images(data)  # 打乱
-
     x_train, y_train = data  # 还原
 
     # 将灰度矩阵列表转换为向量
@@ -175,6 +150,93 @@ def MLP(data, layer, epochs=5):
 
         # # 打印训练进度
         # print(f'Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}')
+
+    # 返回训练好的模型
+    return model
+
+
+def CNN(data, layer, epochs=5):
+    # # 示例JSON配置
+    # layer = {
+    #     "conv2d1": (16, 2),
+    #     "ReLU1": -1,
+    #     "maxpool2d": 2,
+    #     "conv2d2": (32, 2),
+    #     "ReLU2": -1,
+    #     "linear1": 10
+    # }
+
+    # 定义CNN网络
+    class DynamicCNN(nn.Module):
+        def __init__(self, config):
+            super(DynamicCNN, self).__init__()
+            self.layers = nn.ModuleList()
+            input_channels = 1  # 一开始的input是1，因为是灰度图像
+
+            for layer_name, layer_params in config.items():
+                if 'conv2d' in layer_name:
+                    # 卷积层参数：output_channels, kernel_size
+                    out_channels, kernel_size = layer_params[0], layer_params[1]
+                    conv_layer = nn.Conv2d(input_channels, out_channels, kernel_size=kernel_size)
+                    self.layers.append(conv_layer)
+                    input_channels = out_channels  # 更新输入通道数为输出通道数
+
+                elif 'maxpool2d' in layer_name:
+                    # 最大池化层参数：kernel_size
+                    kernel_size = layer_params
+                    pool_layer = nn.MaxPool2d(kernel_size=kernel_size)
+                    self.layers.append(pool_layer)
+
+                elif 'ReLU' in layer_name:
+                    # ReLU激活层
+                    self.layers.append(nn.ReLU())
+
+                elif 'sigmoid' in layer_name:
+                    # Sigmoid激活层
+                    self.layers.append(nn.Sigmoid())
+
+                elif 'linear' in layer_name:
+                    # 全连接层的参数是output_features
+                    self.output_features = layer_params
+
+        def forward(self, x):
+            for i, layer in enumerate(self.layers):
+                if i == len(self.layers) - 1:
+                    # 到达倒数第二层，准备添加线性层
+                    x = x.view(x.size(0), -1)  # 展平操作
+                    fc_layer = nn.Linear(x.size(1), self.output_features)
+                    x = fc_layer(x)
+                else:
+                    x = layer(x)
+
+    x_train, y_train = data  # 还原
+
+    # 将灰度矩阵列表转换为张量
+    x_train_tensor = torch.tensor(x_train).unsqueeze(1).float()
+
+    # 将标签列表转换为张量
+    y_train_tensor = torch.tensor(y_train, dtype=torch.long)
+
+    # 解析layer并创建网络
+    model = DynamicCNN(layer)
+
+    # 定义损失函数和优化器
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters())
+
+    # 将数据转换为适合训练的格式
+    train_dataset = TensorDataset(torch.tensor(x_train, dtype=torch.float32), torch.tensor(y_train, dtype=torch.long))
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+    # 训练模型
+    model.train()
+    for epoch in range(epochs):
+        for batch_idx, (data, target) in enumerate(train_loader):
+            optimizer.zero_grad()  # 清空之前的梯度
+            output = model(data)  # 前向传播
+            loss = criterion(output, target)  # 计算损失
+            loss.backward()  # 反向传播
+            optimizer.step()  # 更新参数
 
     # 返回训练好的模型
     return model
