@@ -5,44 +5,44 @@ from fastapi import Body
 
 router = APIRouter()
 
-# # 模拟读取JSON字符串
-# json_string ='''
-# {
-#     "task":"ImageClassification",
-#     "import_data":{
-#     "method":"import_zip_data",
-#     "file_path":"handwriting_digits.zip"
-#     },
-#     "data_preprocessing":[
-#         {
-#             "name":"normalize_images",
-#             "arguments":{
-#                 "mean":""
-#             }
-#         },
-#         {
-#             "name":"standardize_images",
-#             "arguments":{
-#             "mean" : ""
-#             }
-#         }
-#     ],
-#     "model_selection":{
-#         "name":"CNN",
-#         "arguments":{
-#             "epochs":15,
-#         "layer":{
-#         "conv2d1":[32, 2],
-#         "ReLU1": -1,
-#         "conv2d2":[16, 2] ,
-#         "ReLU": -1,
-#         "maxpool2d":2,
-#         "linear1":10
-#     }
-#         }
-#     },
-#     "model_evaluation":["Accuracy", "F1_score"]
-# }'''
+# 模拟读取JSON字符串
+json_string ='''
+{
+    "task":"ImageClassification",
+    "import_data":{
+    "method":"import_zip_data",
+    "file_path":"handwriting_digits.zip"
+    },
+    "data_preprocessing":[
+        {
+            "name":"normalize_images",
+            "arguments":{
+                "mean":""
+            }
+        },
+        {
+            "name":"standardize_images",
+            "arguments":{
+            "mean" : ""
+            }
+        }
+    ],
+    "model_selection":{
+        "name":"CNN",
+        "arguments":{
+            "epochs":15,
+        "layer":{
+        "conv2d1":[32, 2],
+        "ReLU1": -1,
+        "conv2d2":[16, 2] ,
+        "ReLU": -1,
+        "maxpool2d":2,
+        "linear1":10
+    }
+        }
+    },
+    "model_evaluation":["Accuracy", "F1_score"]
+}'''
 @router.post("/trainModel")
 async def trainModel(data=Body(None)):
     print(data)

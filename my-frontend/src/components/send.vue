@@ -10,25 +10,25 @@
         "ReLU1":-1,
         "linear2":128,
         "ReLU2":-1,
-        "linear3":-1
+        "linear3":10
       }
     }
     }
     const processData =   [
-    {
-      "name": "normalize_images",
-      "arguments": {
-         "mean": ""
+      {
+        "name": "Normalize",
+        "arguments": {
+          "mean": ""
+        }
+      },
+      {
+        "name": "Standardize",
+        "arguments": {
+          "mean": ""
+        }
       }
-    },
-    {
-      "name": "standardize_images",
-      "arguments": {
-         "mean": ""
-      }
-    }
-  ]
-    const evaData = ["Accuracy", "F1_score"]
+    ]
+    const evaData = ["Accuracy", "F1"]
     function say(message) {
         axios.post('http://localhost:8080/model/MLP',data,{
             headers:{
