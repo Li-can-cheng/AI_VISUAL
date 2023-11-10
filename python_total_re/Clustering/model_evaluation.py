@@ -1,7 +1,7 @@
 from sklearn.metrics import silhouette_score
 from sklearn.metrics import davies_bouldin_score, calinski_harabasz_score
 
-def evaluate_model_silhouette(X, labels):
+def Silhouette(X, labels):
     # 示例用法（这需要您提供数据集 X 和对应的簇标签 labels）
     # X = ... # 数据集特征
     # labels = ... # 由聚类模型分配的簇标签
@@ -24,7 +24,7 @@ def evaluate_model_silhouette(X, labels):
     silhouette_avg = silhouette_score(X, labels)
     return silhouette_avg
 
-def evaluate_davies_bouldin(X, labels):
+def DB(X, labels):
     """
     计算并返回Davies-Bouldin指数以评估聚类模型。
 
@@ -39,7 +39,7 @@ def evaluate_davies_bouldin(X, labels):
     return db_index
 
 
-def evaluate_calinski_harabasz(X, labels):
+def CH(X, labels):
     """
     计算并返回Calinski-Harabasz指数以评估聚类模型。
 

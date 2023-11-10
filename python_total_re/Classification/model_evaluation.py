@@ -5,7 +5,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import mean_squared_error
 import numpy as np
 
-def calculate_precision(y_true, y_pred):
+def Precision(y_true, y_pred):
     """
     计算模型的精确率
 
@@ -19,7 +19,7 @@ def calculate_precision(y_true, y_pred):
     precision = precision_score(y_true, y_pred)
     return precision
 
-def calculate_f1_score(y_true, y_pred):
+def F1(y_true, y_pred):
     """
     计算模型的F1值
 
@@ -33,7 +33,7 @@ def calculate_f1_score(y_true, y_pred):
     f1 = f1_score(y_true, y_pred)
     return f1
 
-def calculate_auc_score(y_true, y_pred):
+def Auc(y_true, y_pred):
     """
     计算模型的AUC值
 
@@ -47,7 +47,7 @@ def calculate_auc_score(y_true, y_pred):
     auc_score = roc_auc_score(y_true, y_pred)
     return auc_score
 
-def calculate_roc(y_true, y_pred):
+def Roc(y_true, y_pred):
     """
     计算模型的ROC曲线和AUC值
 

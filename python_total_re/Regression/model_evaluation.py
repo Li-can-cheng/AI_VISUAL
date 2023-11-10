@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 from sklearn.metrics import mean_squared_error, r2_score
 
-def calculate_mse(y_true, y_pred):
+def Mse(y_true, y_pred):
     """
     ... 计算模型的均方误差（MSE）
 
@@ -20,7 +20,7 @@ def calculate_mse(y_true, y_pred):
     mse = mean_squared_error(y_true, y_pred)
     return mse
 
-def calculate_mape(y_true, y_pred):
+def Mape(y_true, y_pred):
     """
     计算模型的平均绝对百分比误差（MAPE）
 
@@ -35,7 +35,7 @@ def calculate_mape(y_true, y_pred):
     mape = np.mean(errors) * 100
     return mape
 
-def calculate_rmse(y_true, y_pred):
+def Rmse(y_true, y_pred):
     """
     计算模型的均方根误差（RMSE）
 
@@ -50,7 +50,7 @@ def calculate_rmse(y_true, y_pred):
     rmse = mse ** 0.5
     return rmse
 
-def calculate_r2(y_true, y_pred):
+def R2(y_true, y_pred):
     """
     计算模型的R平方值（R^2）
 
@@ -64,7 +64,7 @@ def calculate_r2(y_true, y_pred):
     r2 = r2_score(y_true, y_pred)
     return r2
 
-def calculate_max_error(y_true, y_pred):
+def ME(y_true, y_pred):
     """
     计算模型的最大残差
 

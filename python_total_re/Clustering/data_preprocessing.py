@@ -6,7 +6,7 @@ import jieba
 import cv2
 import sys
 
-def handle_missing_values(data, method='mean'):
+def Missing(data, method='mean'):
     """
     根据指定的方法来填充或删除数据中的缺失值
 
@@ -41,7 +41,7 @@ def handle_missing_values(data, method='mean'):
 
     return cleaned_data
 
-def handle_outliers(data, method='z-score', replace_method='extremes', threshold=3):
+def Outliers(data, method='z-score', replace_method='extremes', threshold=3):
     """
     处理数据中的异常值，可以选择用极值或均值/中位数替换异常值。
 
@@ -89,7 +89,7 @@ def handle_outliers(data, method='z-score', replace_method='extremes', threshold
 
     return cleaned_data
 
-def filter_data(data, condition):
+def Filter(data, condition):
     """
     根据条件筛选数据
 
@@ -103,7 +103,7 @@ def filter_data(data, condition):
     filtered_data = data.query(condition)
     return filtered_data
 
-def modify_data(data, operation, specifier=None):
+def Modify(data, operation, specifier=None):
     """
     增加或删除数据
 
@@ -182,7 +182,7 @@ from sklearn.preprocessing import StandardScaler, Normalizer
 import cv2
 from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, RobustScaler
 
-def standardize_data(data, method='z_score'):
+def Standardize(data, method='z_score'):
     """
     根据指定的方法对数据进行标准化处理
 
@@ -219,7 +219,7 @@ def standardize_data(data, method='z_score'):
 
     return standardized_data
 
-def normalize_data(data, method='min_max'):
+def Normalize(data, method='min_max'):
     """
     根据指定的方法对数据进行归一化处理
 
@@ -259,7 +259,7 @@ def normalize_data(data, method='min_max'):
 
     return normalized_data
 
-def discretize_data(data, n_bins):
+def Discretize(data, n_bins):
     """
     对数据进行离散化处理
 
@@ -275,7 +275,7 @@ def discretize_data(data, n_bins):
 
     return discretized_data
 
-def calculate_similarity(data):
+def Similarity(data):
     """
     计算数据之间的相似度
 
@@ -289,7 +289,7 @@ def calculate_similarity(data):
 
     return similarity_matrix
 
-def descriptive_statistics(data):
+def Descriptive(data):
     """
     对数据进行描述性统计
 

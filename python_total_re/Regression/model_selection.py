@@ -11,7 +11,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-def train_random_forest_regressor(data, epoch=10, n_estimators=100, max_depth=None, random_state=None):
+def Random_forest(data, epoch=10, n_estimators=100, max_depth=None, random_state=None):
     """
     使用随机森林进行回归模型训练，并使用检验集进行模型评估
 
@@ -40,7 +40,7 @@ def train_random_forest_regressor(data, epoch=10, n_estimators=100, max_depth=No
     return model
 
 
-def select_lightgbm_model(data, epoch=1, params=None):
+def Lightgbm(data, epoch=1, params=None):
     """
     使用LightGBM进行模型选择
 
@@ -73,7 +73,7 @@ def select_lightgbm_model(data, epoch=1, params=None):
 
     return model
 
-def select_xgboost_model(data, epoch=1, params=None):
+def Xgboost(data, epoch=1, params=None):
     """
     使用XGBoost进行模型选择
 
@@ -106,7 +106,7 @@ def select_xgboost_model(data, epoch=1, params=None):
     return model
 
 
-def select_catboost_model_regression(data, epoch=1, params=None):
+def Catboost(data, epoch=1, params=None):
     """
     使用CatBoost进行模型选择
     ... ...

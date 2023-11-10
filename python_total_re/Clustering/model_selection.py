@@ -14,7 +14,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import DBSCAN
 
 
-def kmeans_model(X, n_clusters=3, random_state=None):
+def Kmeans(X, n_clusters=3, random_state=None):
     """
     使用K-means进行模型选择，并绘制聚类结果图。
     注意：这个函数现在返回数据点的聚类标签，而不是模型本身。如果X是二维或三维的，它还会绘制出相应的聚类结果图。
@@ -62,7 +62,7 @@ def kmeans_model(X, n_clusters=3, random_state=None):
 
     return labels
 
-def select_hierarchical_clustering(data, n_clusters=None, linkage_method='ward'):
+def Hierarchical(data, n_clusters=None, linkage_method='ward'):
     """
     对提供的数据执行层次聚类并返回拟合模型。
 
@@ -101,7 +101,7 @@ def select_hierarchical_clustering(data, n_clusters=None, linkage_method='ward')
 
     return result
 
-def dbscan_clustering(X, eps=0.5, min_samples=5):
+def Dbscan(X, eps=0.5, min_samples=5):
     """
     使用DBSCAN进行密度聚类，并绘制聚类结果图。
     注意：这个函数现在返回数据点的聚类标签，而不是模型本身。如果X是二维或三维的，它还会绘制出相应的聚类结果图。

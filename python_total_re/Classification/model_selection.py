@@ -9,7 +9,7 @@ from catboost import CatBoostClassifier
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split
 
-def classify_with_lightgbm(data, num_class, epoch=1, params=None):
+def Lightgbm(data, num_class, epoch=1, params=None):
     """
     使用 LightGBM 进行多分类模型训练
 
@@ -48,7 +48,7 @@ def classify_with_lightgbm(data, num_class, epoch=1, params=None):
     return model
 
 
-def classify_with_catboost(data, num_class, epoch=1, params=None):
+def Catboost(data, num_class, epoch=1, params=None):
     """
     使用 CatBoost 进行多分类模型训练
 
@@ -87,7 +87,7 @@ def classify_with_catboost(data, num_class, epoch=1, params=None):
 
     return model
 
-def classify_with_xgboost(data, num_class, epoch=1, params=None):
+def Xgboost(data, num_class, epoch=1, params=None):
     """
     使用 XGBoost 进行多分类模型训练
 
@@ -129,66 +129,4 @@ def classify_with_xgboost(data, num_class, epoch=1, params=None):
                           early_stopping_rounds=10, xgb_model=model)
 
     return model
-
-def CNN_model(data, num_class, epoch=1, lr=0.001, batch_size=64):
-    """
-    搭建CNN(卷积神经网络)模型
-    ... ...
-    参数：
-    x_train: 传入的传入
-
-
-    返回：
-
-    """
-
-    # 定义卷积神经网络模型
-    class CNN(nn.Module):
-        def __init__(self):
-            super(CNN, self).__init__()
-            self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)
-            self.relu = nn.ReLU()
-            self.maxpool = nn.MaxPool2d(kernel_size=2, stride=2)
-            self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-            self.fc = nn.Linear(32 * 7 * 7, num_class)  # 次数为n类
-
-        def forward(self, x):
-            x = self.conv1(x)
-            x = self.relu(x)
-            x = self.maxpool(x)
-            x = self.conv2(x)
-            x = self.relu(x)
-            x = self.maxpool(x)
-            x = x.view(x.size(0), -1)
-            x = self.fc(x)
-            return x
-
-    # 创建模型实例、定义损失函数和优化器
-    model = CNN()
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr, momentum=0.9)
-
-    # 训练模型
-    for epo in range(epoch):
-        running_loss = 0.0
-        correct = 0
-        total = 0
-        # 假设 x_train 和 y_train 已经是正确的张量
-        dataset = TensorDataset(x_train, y_train)
-        train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-        for inputs, labels in train_loader:
-            optimizer.zero_grad()
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-
-            running_loss += loss.item()
-            _, predicted = outputs.max(1)
-            total += labels.size(0)
-            correct += predicted.eq(labels).sum().item()
-
-    return model
-
 
