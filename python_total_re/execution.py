@@ -6,7 +6,7 @@ json_string ='''
 {
     "task":"ImageClassification",    
     "import_data":{
-    "file_type":"import_zip_data",
+    "method":"import_zip_data",
     "file_path":"handwriting_digits.zip"
     },
     "data_preprocessing":[
@@ -19,24 +19,25 @@ json_string ='''
         {
             "name":"standardize_images",
             "arguments":{
-                "mean":""
+            "mean" : ""
             }    
         }
     ],
     "model_selection":{
         "name":"CNN",
         "arguments":{
-            "epochs":"",
+            "epochs":15,
         "layer":{
-        "conv2d1": [16, 2],
+        "conv2d1":[32, 2],
         "ReLU1": -1,
-        "maxpool2d": 2,
-        "conv2d2": [32, 2],
-        "ReLU2": -1,
-        "linear1": 10
-    }
+        "conv2d2":[16, 2] ,
+        "ReLU": -1,
+        "maxpool2d":2,
+        "linear1":10
+    }  
         }
-    }
+    }, 
+    "model_evaluation":["Accuracy", "F1_score"]
 }'''
 
 
@@ -51,7 +52,7 @@ file_path = data_dict["import_data"]["file_path"]  # 读取路径参数
 module_path = task
 
 # ③ 读取"import_data"函数名称
-import_function_name = data_dict["import_data"]["file_type"]  # 由于列表中只有一个值，直接取出来
+import_function_name = data_dict["import_data"]["method"]  # 由于列表中只有一个值，直接取出来
 import_module = importlib.import_module(f"{module_path}.import_data")
 import_function = getattr(import_module, import_function_name)
 
@@ -75,14 +76,17 @@ for preprocessing_step in data_dict["data_preprocessing"]:
     preprocessing_function = getattr(preprocessing_module, function_name)
     data = preprocessing_function(**cleaned_arguments)
 
-# ⑤ 模型选择和训练
-model_name, model_arguments = data_dict["model_selection"]["name"], data_dict["model_selection"]["arguments"]
-cleaned_model_arguments = {k: v for k, v in model_arguments.items() if v != '' and v is not None and v != -1}
+# ⑤ 模型选择、训练，模型评估
+model_name = data_dict["model_selection"]["name"]
+model_arguments = data_dict["model_selection"]["arguments"]
+cleaned_model_arguments = {k: v for k, v in model_arguments.items() if v != '' and v is not None and v != -1 and v != 0}
 cleaned_model_arguments['data'] = data
 
 # 调用模型选择模块中的模型函数
 model_module = importlib.import_module(f"{module_path}.model_selection")
 model_function = getattr(model_module, model_name)
+evaluation_module = importlib.import_module(f"{module_path}.model_evaluation")  # 选择评估模块
+evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_evaluation"]]  # 获取评估函数
+cleaned_model_arguments['evaluation_functions'] = evaluation_functions
 model = model_function(**cleaned_model_arguments)
 
-# 模型评估还没写

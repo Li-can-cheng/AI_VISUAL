@@ -9,74 +9,23 @@ from catboost import CatBoostClassifier
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split
 import random
+import requests
+from torch.utils.data import Dataset
 
-def CNN_model(x_train, y_train, num_class, epoch=1, lr=0.001, batch_size=64):
-    """
-    搭建CNN(卷积神经网络)模型
-    ... ...
-    参数：
-    x_train: 传入的images_list
-    y_train: 传入的labels_list
+class MyDataset(Dataset):
+    def __init__(self, x_train, y_train):
+        self.x_train = x_train
+        self.y_train = y_train
 
+    def __len__(self):
+        return len(self.x_train)
 
-    返回：
-    训练好的网络模型
-    """
+    def __getitem__(self, index):
+        x = self.x_train[index]
+        y = self.y_train[index]
+        return x, y
 
-    # 使用这个网络要经过的必要形状转化
-    x_train_tensor = torch.tensor(x_train).float().unsqueeze(1).view(-1, 1, 28, 28)
-    y_train_tensor = torch.tensor(y_train).long()
-
-    # 定义卷积神经网络模型
-    class CNN(nn.Module):
-        def __init__(self):
-            super(CNN, self).__init__()
-            self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)
-            self.relu = nn.ReLU()
-            self.maxpool = nn.MaxPool2d(kernel_size=2, stride=2)
-            self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-            self.fc = nn.Linear(32 * 7 * 7, num_class)  # 次数为n类
-
-        def forward(self, x):
-            x = self.conv1(x)
-            x = self.relu(x)
-            x = self.maxpool(x)
-            x = self.conv2(x)
-            x = self.relu(x)
-            x = self.maxpool(x)
-            x = x.view(x.size(0), -1)
-            x = self.fc(x)
-            return x
-
-    # 创建模型实例、定义损失函数和优化器
-    model = CNN()
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr, momentum=0.9)
-
-    # 训练模型
-    for epo in range(epoch):
-        running_loss = 0.0
-        correct = 0
-        total = 0
-        # 假设 x_train 和 y_train 已经是正确的张量
-        dataset = TensorDataset(x_train, y_train)
-        train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-        for inputs, labels in train_loader:
-            optimizer.zero_grad()
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-
-            running_loss += loss.item()
-            _, predicted = outputs.max(1)
-            total += labels.size(0)
-            correct += predicted.eq(labels).sum().item()
-
-    return model
-
-def MLP(data, layer, epochs=5):
+def MLP(data, layer, evaluation_functions, epochs=5):
     """
     训练一个多层感知器模型。
 
@@ -97,6 +46,10 @@ def MLP(data, layer, epochs=5):
     # trained_model = train_mlp_model(x_train, y_train, epochs, user_config)
 
     x_train, y_train = data  # 还原
+    evaluation_score = []  # 用来存储所有评估得分
+    score = {}  # 存储每个分数的单个得分
+    loss_list = []  # 存储损失列表
+    url = "http://123"  # 准备发送给后端的url
 
     # 将灰度矩阵列表转换为向量
     x_train_tensors = [torch.tensor(matrix, dtype=torch.float32).view(-1) for matrix in x_train]
@@ -123,6 +76,8 @@ def MLP(data, layer, epochs=5):
                     layers.append(nn.ReLU())
                 elif 'sigmoid' in layer_name:
                     layers.append(nn.Sigmoid())
+                elif 'softmax' in layer_name:
+                    layers.append(nn.Softmax())
             self.layers = nn.Sequential(*layers)
 
         def forward(self, x):
@@ -133,7 +88,7 @@ def MLP(data, layer, epochs=5):
 
     # 定义损失函数和优化器
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.SGD(model.parameters(), lr=0.01)
 
     # 创建数据加载器
     dataset = TensorDataset(x_train_tensor, y_train_tensor)
@@ -141,21 +96,41 @@ def MLP(data, layer, epochs=5):
 
     # 训练模型
     for epoch in range(epochs):
+        outputs_list = []  # 存储预测列表
+        targets_list = []  # label列表
         for inputs, targets in data_loader:
             optimizer.zero_grad()  # 清除梯度
             outputs = model(inputs)  # 前向传播
+            outputs_, _ = torch.max(outputs, dim=1)
+            outputs_list.extend(outputs_)
+            targets_ = targets.tolist()
+            targets_list.extend(targets_)
             loss = criterion(outputs, targets)  # 计算损失
             loss.backward()  # 反向传播
             optimizer.step()  # 更新权重
+        outputs_list = [int(tensor.item()) for tensor in outputs_list]
 
+        evaluation_score.append(tuple([eva_func(outputs_list, targets_list) for eva_func in evaluation_functions]))
+        loss_list.append(loss.item())  # 储存该epoch下的损失
         # # 打印训练进度
         # print(f'Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}')
+
+    for i, eva_func in enumerate(evaluation_functions):
+        score[eva_func.__name__] = [item[i] for item in evaluation_score]
+    score['loss'] = loss_list
+    print(score)
+    # response = requests.post(url, json=score)  # 发送数据
+    #
+    # if response.status_code == 200:
+    #     print("数据发送成功！")
+    # else:
+    #     print("数据发送失败！")
 
     # 返回训练好的模型
     return model
 
 
-def CNN(data, layer, epochs=5):
+def CNN(data, layer, evaluation_functions, epochs=5):
     # # 示例JSON配置
     # layer = {
     #     "conv2d1": (16, 2),
@@ -165,6 +140,10 @@ def CNN(data, layer, epochs=5):
     #     "ReLU2": -1,
     #     "linear1": 10
     # }
+
+    evaluation_score = []  # 用来存储所有评估得分
+    score = {}  # 存储每个分数的单个得分
+    loss_list = []  # 存储损失列表
 
     # 定义CNN网络
     class DynamicCNN(nn.Module):
@@ -208,11 +187,12 @@ def CNN(data, layer, epochs=5):
                     x = fc_layer(x)
                 else:
                     x = layer(x)
+            return x
 
     x_train, y_train = data  # 还原
 
     # 将灰度矩阵列表转换为张量
-    x_train_tensor = torch.tensor(x_train).unsqueeze(1).float()
+    x_train_tensor = torch.tensor(x_train).unsqueeze(1).float()  # []
 
     # 将标签列表转换为张量
     y_train_tensor = torch.tensor(y_train, dtype=torch.long)
@@ -222,21 +202,43 @@ def CNN(data, layer, epochs=5):
 
     # 定义损失函数和优化器
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.SGD(model.parameters(), lr=0.01)
 
     # 将数据转换为适合训练的格式
-    train_dataset = TensorDataset(torch.tensor(x_train, dtype=torch.float32), torch.tensor(y_train, dtype=torch.long))
+    train_dataset = MyDataset(x_train_tensor, y_train_tensor)
     train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
     # 训练模型
     model.train()
     for epoch in range(epochs):
-        for batch_idx, (data, target) in enumerate(train_loader):
+        outputs_list = []  # 存储预测列表
+        targets_list = []  # label列表
+        for batch_idx, (data, targets) in enumerate(train_loader):
             optimizer.zero_grad()  # 清空之前的梯度
-            output = model(data)  # 前向传播
-            loss = criterion(output, target)  # 计算损失
+            outputs = model(data)  # 前向传播
+            loss = criterion(outputs, targets)  # 计算损失
             loss.backward()  # 反向传播
             optimizer.step()  # 更新参数
+            outputs_, _ = torch.max(outputs, dim=1)
+            outputs_list.extend(outputs_)
+            targets_ = targets.tolist()
+            targets_list.extend(targets_)
+            loss = criterion(outputs, targets)  # 计算损失
+        outputs_list = [int(tensor.item()) for tensor in outputs_list]  # outputs转换成张量
+        evaluation_score.append(tuple([eva_func(outputs_list, targets_list) for eva_func in evaluation_functions]))
+        loss_list.append(loss.item())  # 储存该epoch下的损失
+
+    for i, eva_func in enumerate(evaluation_functions):
+        score[eva_func.__name__] = [item[i] for item in evaluation_score]
+    score['loss'] = loss_list
+    print(score)
+    # response = requests.post(url, json=score)  # 发送数据
+    #
+    # if response.status_code == 200:
+    #     print("数据发送成功！")
+    # else:
+    #     print("数据发送失败！")
 
     # 返回训练好的模型
     return model
+
