@@ -15,5 +15,6 @@ public class Model {
     private ImportData import_data;
     private DataProcessing[] data_processing;
     private ModelSelectionInterface model_selection;
+    private String[] model_evaluation;
 
 }

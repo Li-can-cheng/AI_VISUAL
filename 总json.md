@@ -8,11 +8,15 @@
     "data_preprocessing":[
         {
             "name":"normalize_images",
-            "arguments":""
+            "arguments":{
+              "mean":""
+            }
         },
         {
             "name":"standardize_images",
-            "arguments":""
+            "arguments":{
+              "mean":""
+            }
         }
     ],
     "model_selection":{
@@ -28,6 +32,7 @@
                 "linear3":""
             }
         }
-    }
+    },
+  "model_evaluation":["Accuracy", "F1_score"]
 }
 ```

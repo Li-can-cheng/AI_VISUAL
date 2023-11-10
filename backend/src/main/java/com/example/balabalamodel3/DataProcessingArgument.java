@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @ToString
 @Component
-public class DataProcessing {
-    private String name;
-    private DataProcessingArgument arguments;
+public class DataProcessingArgument {
+    private String mean;
 }

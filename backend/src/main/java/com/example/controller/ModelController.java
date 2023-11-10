@@ -22,7 +22,7 @@ public class ModelController {
 //    @Autowired
 //    private ModelSelectionInterface model_selection;
     @Autowired
-    private MLP model_selection;
+    private ModelSelectionInterface model_selection;
     @Autowired
     private AcceptData acceptData;
     @Autowired
@@ -44,13 +44,19 @@ public class ModelController {
         model.setData_processing(data_processing);
         return gson.toJson(data_processing);
     }
-    @PostMapping("/model/send_model_selection")
+    @PostMapping("/model/MLP")
     public String acceptDataProcessing(@RequestBody MLP model_selection){
 //        if("MLP".equals(model_selection.getName())) {
 //            mlp.setArguments();
 //        }
         model.setModel_selection(model_selection);
 
+        return gson.toJson(model_selection);
+    }
+
+    @PostMapping("/model/send_model_evaluation")
+    public String acceptModelEvaluation(@RequestBody String[] model_evaluation){
+        model.setModel_evaluation(model_evaluation);
         // 创建RestTemplate实例
         RestTemplate restTemplate = new RestTemplate();
         // 设置请求头，指定JSON格式(MediaType.APPLICATION_JSON)
@@ -63,5 +69,10 @@ public class ModelController {
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         // 处理响应（返回的数据）
         return response.getBody();
+    }
+
+    @PostMapping("/test")
+    public String test(@RequestBody String json){
+        return json;
     }
 }
