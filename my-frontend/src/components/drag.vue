@@ -74,24 +74,36 @@ import axios from 'axios';
     </form>
 </template> -->
 <script setup>
-    function submit(){
-        let fd = new FormData();
-        fd.append("img",this.$ref.picx.files[0]);
-        fd.append("username","balabala");
-        axios({
-            url:"/f",
-            method:"post",
-            headers:{'Content-Type':'multipart/form-data'},
-            data:fd
-        }).then(function(response){
-            console.log(response.data)
-        })
-    }
+import { ref } from 'vue';
+import axios from 'axios';
+
+const picx = ref(null); // 使用 ref 创建一个响应式引用
+
+function submit(event) {
+  event.preventDefault(); // 阻止表单的默认提交行为
+  let fd = new FormData();
+  if (picx.value && picx.value.files[0]) {
+    fd.append("file", picx.value.files[0]);
+    fd.append("username", "balabala");
+    axios({
+      url: "http://localhost:8080/model/sendFile?task=ImageClassification",
+      method: "post",
+      headers: {'Content-Type': 'multipart/form-data'},
+      data: fd
+    }).then(function(response) {
+      console.log(response.data);
+    }).catch(function(error) {
+      console.error('上传文件时出错:', error);
+    });
+  } else {
+    console.log('没有选择文件');
+  }
+}
 </script>
+
 <template>
-    <form>
-        图片：<input ref='picx' type="file"  />
-    </form>
-    <button @click="submit">Post利用FormData上传文件</button><br>
-    <!-- <button @click="submitx">Post利用FormData上传文件 简介写法</button> -->
+  <form @submit.prevent="submit">
+    图片：<input ref="picx" type="file" />
+    <button type="submit">Post利用FormData上传文件</button><br>
+  </form>
 </template>
