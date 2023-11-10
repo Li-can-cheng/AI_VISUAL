@@ -12,9 +12,9 @@
         data(){
             return{
                 list1:[
-                    {name:"John",id:1},
-                    {name:"Joao",id:2},
-                    {name:"Jean",id:3},
+                    {name:"CNN模型",id:1},
+                    {name:"神经网络",id:2},
+                    {name:"集成模型",id:3},
                     {name:"Gerard",id:4},
                     {name:"Edgard",id:6},
                     {name:"Johnson",id:7},

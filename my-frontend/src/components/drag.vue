@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 // 利用canvas实现拖拽功能
 </script>
 <template>
@@ -46,4 +46,52 @@
  };
  };
  }
+</script> -->
+<!-- <script setup>
+import axios from 'axios';
+
+    function myFunction() {
+        var data = document.getElementById("myForm");
+        axios.post('http://localhost:8080/model/sendFile?task=ImageClassification',){
+
+        }
+        axios.post('http://localhost:8080/model/MLP',data,{
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(response=>{
+            // console.log(response)
+            console.log(response)
+        }).catch(error=>{
+            console.log(error)
+        })
+    }
 </script>
+<template>
+    <form id="myForm" action="http://localhost:8080/model/sendFile?task=ImageClassification">
+    文件上传：<input type="file" id="fileInput" name="fileInput" ><br>
+    <input type="button" @click="myFunction()" value="提交表单">
+    </form>
+</template> -->
+<script setup>
+    function submit(){
+        let fd = new FormData();
+        fd.append("img",this.$ref.picx.files[0]);
+        fd.append("username","balabala");
+        axios({
+            url:"/f",
+            method:"post",
+            headers:{'Content-Type':'multipart/form-data'},
+            data:fd
+        }).then(function(response){
+            console.log(response.data)
+        })
+    }
+</script>
+<template>
+    <form>
+        图片：<input ref='picx' type="file"  />
+    </form>
+    <button @click="submit">Post利用FormData上传文件</button><br>
+    <!-- <button @click="submitx">Post利用FormData上传文件 简介写法</button> -->
+</template>
