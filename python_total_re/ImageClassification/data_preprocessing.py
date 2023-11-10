@@ -2,7 +2,7 @@ import random
 import numpy as np
 import sys
 
-def standardize_images(data, method='z_score'):
+def Standardize(data, method='z_score'):
     """
     根据指定的方法对图像的灰度矩阵进行标准化处理
 
@@ -45,7 +45,7 @@ def standardize_images(data, method='z_score'):
 
     return standardized_images, labels_list
 
-def normalize_images(data, method='min_max'):
+def Normalize(data, method='min_max'):
     """
     根据指定的方法对图像的灰度矩阵进行归一化处理
 
