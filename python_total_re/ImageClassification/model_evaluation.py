@@ -48,7 +48,7 @@ def Recall(y_true, y_pred):
     recall = recall_score(y_true, y_pred, average='micro')
     return recall
 
-def F1_score(y_true, y_pred):
+def F1(y_true, y_pred):
     """
     计算模型的F1值
 
@@ -62,7 +62,7 @@ def F1_score(y_true, y_pred):
     f1 = f1_score(y_true, y_pred, average='micro')
     return f1
 
-def Auc_score(y_true, y_pred):
+def Auc(y_true, y_pred):
     """
     计算模型的AUC值
 

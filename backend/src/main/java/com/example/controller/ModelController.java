@@ -40,9 +40,9 @@ public class ModelController {
     }
 
     @PostMapping("/model/send_data_processing")
-    public String acceptDataProcessing(@RequestBody DataProcessing[] data_processing){
-        model.setData_processing(data_processing);
-        return gson.toJson(data_processing);
+    public String acceptDataProcessing(@RequestBody DataProcessing[] data_preprocessing){
+        model.setData_preprocessing(data_preprocessing);
+        return gson.toJson(data_preprocessing);
     }
     @PostMapping("/model/MLP")
     public String acceptDataProcessing(@RequestBody MLP model_selection){

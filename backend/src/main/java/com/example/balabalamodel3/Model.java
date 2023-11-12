@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class Model {
     private String task;
     private ImportData import_data;
-    private DataProcessing[] data_processing;
+    private DataProcessing[] data_preprocessing;
     private ModelSelectionInterface model_selection;
     private String[] model_evaluation;
 

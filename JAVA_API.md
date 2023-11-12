@@ -25,13 +25,13 @@
   ```json
   [
     {
-      "name": "normalize_images",
+      "name": "Normalize",
       "arguments": {
          "mean": ""
       }
     },
     {
-      "name": "standardize_images",
+      "name": "Standardize",
       "arguments": {
          "mean": ""
       }
@@ -59,7 +59,7 @@
         "ReLU1":-1,
         "linear2":128,
         "ReLU2":-1,
-        "linear3":-1
+        "linear3":10
       }
     }
   }
@@ -77,5 +77,5 @@
   ```
 - 请求参数
   ```json
-  ["Accuracy", "F1_score"]
+  ["Accuracy", "F1"]
   ```

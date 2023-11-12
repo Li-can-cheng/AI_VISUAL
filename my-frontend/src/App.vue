@@ -3,12 +3,19 @@ import Page from './components/page.vue'
 import Draggable from './components/draggable.vue';
 import upload from './components/upload.vue'
 import Header from './components/Header.vue'
+import send from './components/send.vue'
+import drag from './components/drag.vue'
 </script>
 
 <template>
-  <Page/>
+  <drag></drag>
+  <!-- <Page/> -->
   <!-- <Draggable></Draggable> -->
-  <!-- <upload></upload> -->
+  
+  <upload></upload>
+  <br/>
+  <br/>
+  <send></send>
   <!-- <Header></Header> -->
 </template>
 <style>

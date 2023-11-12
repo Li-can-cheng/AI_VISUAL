@@ -126,8 +126,9 @@ def MLP(data, layer, evaluation_functions, epochs=5):
     # else:
     #     print("数据发送失败！")
 
-    # 返回训练好的模型
-    return model
+    # 返回训练好的模型s
+    data = (model, score)
+    return data
 
 
 def CNN(data, layer, evaluation_functions, epochs=5):
@@ -240,5 +241,6 @@ def CNN(data, layer, evaluation_functions, epochs=5):
     #     print("数据发送失败！")
 
     # 返回训练好的模型
-    return model
+    data = (model, score)
+    return data
 
