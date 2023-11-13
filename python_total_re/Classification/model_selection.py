@@ -130,3 +130,4 @@ def Xgboost(data, num_class, epoch=1, params=None):
 
     return model
 
+d

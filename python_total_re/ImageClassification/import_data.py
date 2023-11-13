@@ -20,7 +20,7 @@ def import_zip_data(zip_path):
                 label = int(folder[:-1])
                 for filename in z.namelist():
                     if filename.startswith(folder) and not filename.endswith('/'):
-                        with z.open(filename) as file:
+                          with z.open(filename) as file:
                             content = file.read()
                             img_array = np.frombuffer(content, np.uint8)
                             img = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)

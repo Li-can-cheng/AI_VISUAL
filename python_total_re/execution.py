@@ -2,6 +2,10 @@ import json
 import importlib
 from fastapi import APIRouter
 from fastapi import Body
+import os
+import pickle
+import torch
+from sklearn.ensemble import RandomForestRegressor
 
 router = APIRouter()
 
@@ -41,7 +45,8 @@ json_string ='''
     }
         }
     },
-    "model_evaluation":["Accuracy", "F1_score"]
+    "model_evaluation":["Accuracy", "F1_score"],
+    "username":"xxxx"
 }'''
 @router.post("/trainModel")
 async def trainModel(data=Body(None)):
@@ -97,3 +102,22 @@ evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["mo
 cleaned_model_arguments['evaluation_functions'] = evaluation_functions
 model = model_function(**cleaned_model_arguments)
 
+# 保存模型
+username = data_dict["username"]
+
+# 创建model_save文件夹
+folder_path = "model_save"
+
+# 写入Python代码到文件中
+if isinstance(data_dict["model"], RandomForestRegressor):
+    file_path = os.path.join(folder_path, f"{username}_{model_name}.pkl")
+    with open(file_path, 'wb') as f:
+        pickle.dump(model, f)
+
+elif isinstance(data_dict["model"], torch.nn.Module):
+    file_path = os.path.join(folder_path, f"{username}_{model_name}.pth")
+    torch.save(model.state_dict(), file_path)
+
+else:
+    file_path = os.path.join(folder_path, f"{username}_{model_name}.txt")
+    model.save(file_path)
