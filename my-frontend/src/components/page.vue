@@ -2,58 +2,86 @@
     import { ref } from 'vue'
     import type { UploadProps, UploadUserFile } from 'element-plus'
     import draggable from 'vuedraggable'
+    import upload from './upload.vue'
+    import axios from 'axios'
     export default{
         name:'two-lists',
         display:'Two Lists',
         order:1,
         components:{
-            draggable
+            draggable,
+            upload
         },
         data(){
             return{
                 list1:[
-                    {name:"CNN模型",id:1},
-                    {name:"神经网络",id:2},
-                    {name:"集成模型",id:3},
-                    {name:"Gerard",id:4},
-                    {name:"Edgard",id:6},
-                    {name:"Johnson",id:7},
+                    {name:"CNN模型",id:"cnn"},
+                    {name:"神经网络",id:"MLP"},
+                    {name:"数据预处理",id:"pre-process"},
+                    {name:"模型评估",id:"evaluation"},
+                    {name:"支持向量机",id:"svm"},
                 ],
                 list2:[
-                    {name:"Juan",id:5},
+
                 ],
             };
         },
         methods:{
-            add:function(){
-                this.list1.push({name:"Juan"});
+            getId:function(itemid){
+                return itemid;
             },
-            replace:function(){
-                this.list = [{name:"Edgard"}];
-            },
-            clone:function(el){
-                return{
-                    name:el.name+"cloned"
-                };
-            },
+            // add:function(){
+            //     this.list1.push({name:"Juan"});
+            // },
+            // replace:function(){
+            //     this.list = [{name:"Edgard"}];
+            // },
+            // clone:function(el){
+            //     return{
+            //         name:el.name+"cloned"
+            //     };
+            // },
             log:function(evt){
-                window.console.log(evt); //什么意思？？不懂
+                window.console.log(evt.added.element.id);
+                // window.console.log(evt.added);
+                var name = evt.added.element.id;
+                if(name == 'MLP')
+                {
+                    const data = {
+                        "name":"MLP",
+                        "arguments":{
+                        "epoch":-1,
+                        "layer":{
+                        "linear1":256,
+                        "sigmoid":-1,
+                        "ReLU1":-1,
+                        "linear2":128,
+                        "ReLU2":-1,
+                        "linear3":-1
+                    }
+                    }
+                    }
+                    axios.post('http://localhost:8080/model/MLP',data,{
+                        headers:{
+                            'Content-Type':'application/json'
+                        }
+                    }).then(response=>{
+                        // console.log(response)
+                        console.log(response)
+                    }).catch(error=>{
+                        console.log(error)
+                    })
+                }
+                // var element = document.getElementById(evt.added.element.id)
+                // var ee = document.getElementsByClassName("list-group-item")
+                // var ee = evt.added.element.id
+                // alert(ee)
+                // var ele = document.getElementsByClassName("header")
+                // console.log(ee)
+                var ee =document.getElementById(" ")
             }
         },
         setup(){
-            const fileList = ref<UploadUserFile[]>([
-            {
-            name: 'food.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-            },
-            {
-            name: 'food2.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-            },
-            ])
-            const handleChange: UploadProps['onChange'] = (uploadFile, uploadFiles) => {
-                fileList.value = fileList.value.slice(-3)
-            }
             const active = ref(0)
             const next = ()=>{
                 if(active.value++>4) active.value=0
@@ -63,8 +91,6 @@
                 console.log(key, keyPath)
             }
             return{
-                fileList,
-                handleChange,
                 next,
                 active,
                 activeIndex,
@@ -115,8 +141,8 @@
                 <div class="col-2">
                     <draggable class="list-group" :list="list1" group="people" @change="log" itemKey="name">
                         <template #item="{element,index}">
-                            <div class="list-group-item">
-                                {{ element.name }}{{ index }}
+                            <div class="list-group-item" :id="getId(element.id)">
+                                {{ element.name }}
                             </div>
                         </template>
                     </draggable>
@@ -130,14 +156,15 @@
                     <el-step title="Step1" />
                     <el-step title="Step2" />
                     <el-step title="Step3" />
+                    <el-step title="Step4" />
                     <el-button style="margin-top: 0px;width:80px;height:30px;margin-left:-36px;margin-right:20px;" @click="next">Next step</el-button>
                 </el-steps>
             </div>
           <div class="col-3">
-            <draggable class="list-group" :list="list2" group="people" @change="log" itemKey="name">
+            <draggable class="list-group viewable" :list="list2" group="people" @change="log" itemKey="name">
                 <template #item="{element,index}">
                     <div class="list-group-item">
-                        {{ element.name }}{{ index }}
+                        {{ element.name }}
                     </div>
                 </template>
             </draggable>
@@ -150,22 +177,12 @@
     <div class="result">
         <div class="upload">
             <div class="upload-title">上传文件</div>
-            <el-upload
-                v-model:file-list="fileList"
-                class="upload-demo"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                :on-change="handleChange"
-            >
-                <el-button type="primary">Click to upload</el-button>
-                <template #tip>
-                    <div class="el-upload__tip">
-                    jpg/png files with a size less than 500kb
-                    </div>
-                </template>
-            </el-upload>
+            <div class="upload-content">
+                <upload></upload>
+            </div>
         </div>
         <div class="model-parameter">
-
+            
         </div>
         <div class="result-parameter">
             
@@ -237,13 +254,13 @@
     flex-direction: row;
 }
 .result .upload{
-    width:70%;
+    width:20%;
     height: 100%;
     background-color: rgb(225, 250, 242);
 }
 .result .upload .upload-title{
     height: 30px;
-    width:100%;
+    /* width:100%; */
     line-height: 30px;
     text-align: center;
     font-size: 16px;
@@ -252,12 +269,12 @@
     background-color: rgb(193, 231, 219);  
     box-shadow: 0px 1px 2px rgb(121, 121, 121);
 }
-.model-parameter{
+.result .model-parameter{
     width:180%;
     height: 100%;
     background-color: rgb(157, 206, 190);
 }
-.result-parameter{
+.result .result-parameter{
     height: 100%;
     background-color: rgb(82, 143, 122);
 }

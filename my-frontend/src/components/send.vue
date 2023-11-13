@@ -10,26 +10,26 @@
         "ReLU1":-1,
         "linear2":128,
         "ReLU2":-1,
-        "linear3":10
+        "linear3":-1
       }
     }
     }
-    const processData =   [
-      {
-        "name": "Normalize",
-        "arguments": {
-          "mean": ""
-        }
-      },
-      {
-        "name": "Standardize",
-        "arguments": {
-          "mean": ""
-        }
+    const processData = [
+    {
+      "name": "normalize_images",
+      "arguments": {
+         "mean": ""
       }
+    },
+    {
+      "name": "standardize_images",
+      "arguments": {
+         "mean": ""
+      }
+    }
     ]
-    const evaData = ["Accuracy", "F1"]
-    function say(message) {
+    const evaData = ["Accuracy", "F1_score"]
+    function model_train(message) {
         axios.post('http://localhost:8080/model/MLP',data,{
             headers:{
                 'Content-Type':'application/json'
@@ -68,7 +68,7 @@
     <button @click="pre_process">文件预处理</button>
     <br/>
     <br/>
-	<button @click="say">模型参数上传</button>
+	<button @click="model_train">模型参数上传</button>
     <br/>
     <br/>
 	<button @click="evaluation">模型评估</button>
