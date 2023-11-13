@@ -134,10 +134,10 @@ def MLP(data, layer, evaluation_functions, epochs=5):
 def CNN(data, layer, evaluation_functions, epochs=5):
     # # 示例JSON配置
     # layer = {
-    #     "conv2d1": (16, 2),
+    #     "conv2d1": [16, 2],
     #     "ReLU1": -1,
     #     "maxpool2d": 2,
-    #     "conv2d2": (32, 2),
+    #     "conv2d2": [32, 2],
     #     "ReLU2": -1,
     #     "linear1": 10
     # }
