@@ -63,21 +63,22 @@ def MLP(data, layer, evaluation_functions, epochs=5):
 
     # 创建自定义MLP模型
     class CustomMLP(nn.Module):
-        def __init__(self, config, input_features):
+        def __init__(self, layers, input_features):
             super(CustomMLP, self).__init__()
             layers = []
             input_dim = input_features
-            for layer_name, layer_info in config.items():
-                if 'linear' in layer_name:
-                    output_dim = layer_info
-                    layers.append(nn.Linear(input_dim, output_dim))
-                    input_dim = output_dim  # 更新input_dim为下一层的输入维度
-                elif 'ReLU' in layer_name:
-                    layers.append(nn.ReLU())
-                elif 'sigmoid' in layer_name:
-                    layers.append(nn.Sigmoid())
-                elif 'softmax' in layer_name:
-                    layers.append(nn.Softmax())
+            for layer in layers:
+                for layer_name, layer_info in layer.items():
+                    if 'linear' in layer_name:
+                        output_dim = layer_info
+                        layers.append(nn.Linear(input_dim, output_dim))
+                        input_dim = output_dim  # 更新input_dim为下一层的输入维度
+                    elif 'ReLU' in layer_name:
+                        layers.append(nn.ReLU())
+                    elif 'sigmoid' in layer_name:
+                        layers.append(nn.Sigmoid())
+                    elif 'tanh' in layer_name:
+                        layers.append(nn.Tanh())
             self.layers = nn.Sequential(*layers)
 
         def forward(self, x):
@@ -148,36 +149,37 @@ def CNN(data, layer, evaluation_functions, epochs=5):
 
     # 定义CNN网络
     class DynamicCNN(nn.Module):
-        def __init__(self, config):
+        def __init__(self, layers):
             super(DynamicCNN, self).__init__()
             self.layers = nn.ModuleList()
             input_channels = 1  # 一开始的input是1，因为是灰度图像
 
-            for layer_name, layer_params in config.items():
-                if 'conv2d' in layer_name:
-                    # 卷积层参数：output_channels, kernel_size
-                    out_channels, kernel_size = layer_params[0], layer_params[1]
-                    conv_layer = nn.Conv2d(input_channels, out_channels, kernel_size=kernel_size)
-                    self.layers.append(conv_layer)
-                    input_channels = out_channels  # 更新输入通道数为输出通道数
+            for layer in layers.items():
+                for layer_name, layer_params in layer.items():
+                    if 'conv2d' in layer_name:
+                        # 卷积层参数：output_channels, kernel_size
+                        out_channels, kernel_size = layer_params[0], layer_params[1]
+                        conv_layer = nn.Conv2d(input_channels, out_channels, kernel_size=kernel_size)
+                        self.layers.append(conv_layer)
+                        input_channels = out_channels  # 更新输入通道数为输出通道数
 
-                elif 'maxpool2d' in layer_name:
-                    # 最大池化层参数：kernel_size
-                    kernel_size = layer_params
-                    pool_layer = nn.MaxPool2d(kernel_size=kernel_size)
-                    self.layers.append(pool_layer)
+                    elif 'maxpool2d' in layer_name:
+                        # 最大池化层参数：kernel_size
+                        kernel_size = layer_params
+                        pool_layer = nn.MaxPool2d(kernel_size=kernel_size)
+                        self.layers.append(pool_layer)
 
-                elif 'ReLU' in layer_name:
-                    # ReLU激活层
-                    self.layers.append(nn.ReLU())
+                    elif 'ReLU' in layer_name:
+                        # ReLU激活层
+                        self.layers.append(nn.ReLU())
 
-                elif 'sigmoid' in layer_name:
-                    # Sigmoid激活层
-                    self.layers.append(nn.Sigmoid())
+                    elif 'sigmoid' in layer_name:
+                        # Sigmoid激活层
+                        self.layers.append(nn.Sigmoid())
 
-                elif 'linear' in layer_name:
-                    # 全连接层的参数是output_features
-                    self.output_features = layer_params
+                    elif 'linear' in layer_name:
+                        # 全连接层的参数是output_features
+                        self.output_features = layer_params
 
         def forward(self, x):
             for i, layer in enumerate(self.layers):

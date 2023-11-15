@@ -10,44 +10,48 @@ from sklearn.ensemble import RandomForestRegressor
 router = APIRouter()
 
 # 模拟读取JSON字符串
-json_string ='''
-{
-    "task":"ImageClassification",
-    "import_data":{
-    "method":"import_zip_data",
-    "file_path":"handwriting_digits.zip"
+json_string = {
+  "task": "ImageClassification",
+  "import_data": {
+    "file_path": "/upload/data.csv",
+    "file_type": "import_csv_data"
+  },
+  "data_preprocessing": [
+    {
+      "name": "normalize_images",
+      "arguments": {
+        "mean": ""
+      }
     },
-    "data_preprocessing":[
+    {
+      "name": "standardize_images",
+      "arguments": {
+        "mean": ""
+      }
+    }
+  ],
+  "model_selection": {
+    "name": "MLP",
+    "model_evaluation": [
+      "Accuracy",
+      "F1_score"
+    ],
+    "arguments": {
+      "epoch": 10,
+      "layer": [
         {
-            "name":"normalize_images",
-            "arguments":{
-                "mean":""
-            }
+          "linear": 256,
+          "activate_function": "ReLU"
         },
         {
-            "name":"standardize_images",
-            "arguments":{
-            "mean" : ""
-            }
+          "linear": 128,
+          "activate_function": "ReLU"
         }
-    ],
-    "model_selection":{
-        "name":"CNN",
-        "arguments":{
-            "epochs":15,
-        "layer":{
-        "conv2d1":[32, 2],
-        "ReLU1": -1,
-        "conv2d2":[16, 2] ,
-        "ReLU": -1,
-        "maxpool2d":2,
-        "linear1":10
+      ]
     }
-        }
-    },
-    "model_evaluation":["Accuracy", "F1_score"],
-    "username":"xxxx"
-}'''
+  }
+
+}
 @router.post("/trainModel")
 async def trainModel(data=Body(None)):
     print(data)
@@ -98,7 +102,7 @@ cleaned_model_arguments['data'] = data
 model_module = importlib.import_module(f"{module_path}.model_selection")
 model_function = getattr(model_module, model_name)
 evaluation_module = importlib.import_module(f"{module_path}.model_evaluation")  # 选择评估模块
-evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_evaluation"]]  # 获取评估函数
+evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_selection"]["model_evaluation"]]  # 获取评估函数
 cleaned_model_arguments['evaluation_functions'] = evaluation_functions
 model = model_function(**cleaned_model_arguments)
 
