@@ -11,5 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MLP implements ModelSelectionInterface{
     final private String name = "MLP";
+    private String[] model_evaluation;
     private MLPArguments arguments;
 }
