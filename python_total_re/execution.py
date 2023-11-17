@@ -6,25 +6,26 @@ import os
 import pickle
 import torch
 from sklearn.ensemble import RandomForestRegressor
+import matplotlib.pyplot as plt
 
 router = APIRouter()
 
 # 模拟读取JSON字符串
-json_string = {
+json_string = '''{
   "task": "ImageClassification",
   "import_data": {
-    "file_path": "/upload/data.csv",
-    "file_type": "import_csv_data"
+    "file_path": "handwriting_digits.zip",
+    "file_type": "import_zip_data"
   },
   "data_preprocessing": [
     {
-      "name": "normalize_images",
+      "name": "Normalize",
       "arguments": {
         "mean": ""
       }
     },
     {
-      "name": "standardize_images",
+      "name": "Standardize",
       "arguments": {
         "mean": ""
       }
@@ -34,24 +35,29 @@ json_string = {
     "name": "MLP",
     "model_evaluation": [
       "Accuracy",
-      "F1_score"
+      "F1",
+      "Recall"
     ],
     "arguments": {
-      "epoch": 10,
-      "layer": [
+      "epochs": 100,
+      "layers": [
+        {
+          "linear": 512,
+          "activate_function": "ReLU"
+        },
         {
           "linear": 256,
           "activate_function": "ReLU"
         },
         {
-          "linear": 128,
-          "activate_function": "ReLU"
+              "linear": 10,
+              "activate_function": "softmax"
         }
       ]
     }
   }
 
-}
+}'''
 @router.post("/trainModel")
 async def trainModel(data=Body(None)):
     print(data)
@@ -68,7 +74,7 @@ file_path = data_dict["import_data"]["file_path"]  # 读取路径参数
 module_path = task
 
 # ③ 读取"import_data"函数名称
-import_function_name = data_dict["import_data"]["method"]  # 由于列表中只有一个值，直接取出来
+import_function_name = data_dict["import_data"]["file_type"]  # 由于列表中只有一个值，直接取出来
 import_module = importlib.import_module(f"{module_path}.import_data")
 import_function = getattr(import_module, import_function_name)
 
@@ -104,24 +110,32 @@ model_function = getattr(model_module, model_name)
 evaluation_module = importlib.import_module(f"{module_path}.model_evaluation")  # 选择评估模块
 evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_selection"]["model_evaluation"]]  # 获取评估函数
 cleaned_model_arguments['evaluation_functions'] = evaluation_functions
-model = model_function(**cleaned_model_arguments)
+model, score = model_function(**cleaned_model_arguments)
 
-# 保存模型
-username = data_dict["username"]
+## 保存模型
+# username = data_dict["username"]
+#
+## 创建model_save文件夹
+# folder_path = "model_save"
+#
+# # 写入Python代码到文件中
+# if isinstance(data_dict["model"], RandomForestRegressor):
+#     file_path = os.path.join(folder_path, f"{username}_{model_name}.pkl")
+#     with open(file_path, 'wb') as f:
+#         pickle.dump(model, f)
+#
+# elif isinstance(data_dict["model"], torch.nn.Module):
+#     file_path = os.path.join(folder_path, f"{username}_{model_name}.pth")
+#     torch.save(model.state_dict(), file_path)
+#
+# else:
+#     file_path = os.path.join(folder_path, f"{username}_{model_name}.txt")
+#     model.save(file_path)
 
-# 创建model_save文件夹
-folder_path = "model_save"
-
-# 写入Python代码到文件中
-if isinstance(data_dict["model"], RandomForestRegressor):
-    file_path = os.path.join(folder_path, f"{username}_{model_name}.pkl")
-    with open(file_path, 'wb') as f:
-        pickle.dump(model, f)
-
-elif isinstance(data_dict["model"], torch.nn.Module):
-    file_path = os.path.join(folder_path, f"{username}_{model_name}.pth")
-    torch.save(model.state_dict(), file_path)
-
-else:
-    file_path = os.path.join(folder_path, f"{username}_{model_name}.txt")
-    model.save(file_path)
+for key, value in score.items():
+    plt.plot([i for i in range(len(value))], value)
+    plt.title(key)
+    plt.xlabel("epochs")
+    plt.ylabel(key)
+    plt.grid()
+    plt.show()

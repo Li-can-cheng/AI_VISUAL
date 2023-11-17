@@ -25,7 +25,7 @@ class MyDataset(Dataset):
         y = self.y_train[index]
         return x, y
 
-def MLP(data, layer, evaluation_functions, epochs=5):
+def MLP(data, layers, evaluation_functions, epochs=5):
     """
     训练一个多层感知器模型。
 
@@ -65,31 +65,33 @@ def MLP(data, layer, evaluation_functions, epochs=5):
     class CustomMLP(nn.Module):
         def __init__(self, layers, input_features):
             super(CustomMLP, self).__init__()
-            layers = []
+            layers_list = []
             input_dim = input_features
             for layer in layers:
                 for layer_name, layer_info in layer.items():
                     if 'linear' in layer_name:
                         output_dim = layer_info
-                        layers.append(nn.Linear(input_dim, output_dim))
+                        layers_list.append(nn.Linear(input_dim, output_dim))
                         input_dim = output_dim  # 更新input_dim为下一层的输入维度
-                    elif 'ReLU' in layer_name:
-                        layers.append(nn.ReLU())
-                    elif 'sigmoid' in layer_name:
-                        layers.append(nn.Sigmoid())
-                    elif 'tanh' in layer_name:
-                        layers.append(nn.Tanh())
-            self.layers = nn.Sequential(*layers)
+                    elif 'ReLU' in layer_info:
+                        layers_list.append(nn.ReLU())
+                    elif 'sigmoid' in layer_info:
+                        layers_list.append(nn.Sigmoid())
+                    elif 'tanh' in layer_info:
+                        layers_list.append(nn.Tanh())
+                    elif 'softmax' in layer_info:
+                        layers_list.append(nn.Softmax(dim=1))
+            self.layers = nn.Sequential(*layers_list)
 
         def forward(self, x):
             return self.layers(x)
 
     # 实例化模型
-    model = CustomMLP(layer, input_features)
+    model = CustomMLP(layers, input_features)
 
     # 定义损失函数和优化器
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.01)
+    optimizer = optim.SGD(model.parameters(), lr=0.001)
 
     # 创建数据加载器
     dataset = TensorDataset(x_train_tensor, y_train_tensor)
