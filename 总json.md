@@ -1,38 +1,44 @@
 ```json
 {
-    "task":"ImageClassification",    
-    "import_data":{
-        "file_path":"/upload/data.csv",
-        "file_type":"import_csv_data"
+  "task": "ImageClassification",
+  "import_data": {
+    "file_path": "/upload/data.csv",
+    "file_type": "import_csv_data"
+  },
+  "data_preprocessing": [
+    {
+      "name": "normalize_images",
+      "arguments": {
+        "mean": ""
+      }
     },
-    "data_preprocessing":[
+    {
+      "name": "standardize_images",
+      "arguments": {
+        "mean": ""
+      }
+    }
+  ],
+  "model_selection": {
+    "name": "MLP",
+    "model_evaluation": [
+      "Accuracy",
+      "F1_score"
+    ],
+    "arguments": {
+      "epoch": 10,
+      "layer": [
         {
-            "name":"normalize_images",
-            "arguments":{
-              "mean":""
-            }
+          "linear": 256,
+          "activate_function": "ReLU"
         },
         {
-            "name":"standardize_images",
-            "arguments":{
-              "mean":""
-            }
+          "linear": 128,
+          "activate_function": "ReLU"
         }
-    ],
-    "model_selection":{
-        "name":"MLP",
-        "arguments":{
-            "epoch":"",
-            "layer":{
-                "linear1":"256",
-                "sigmoid":"",
-                "ReLU1":"",
-                "linear2":"128",
-                "ReLU2":"",
-                "linear3":""
-            }
-        }
-    },
-  "model_evaluation":["Accuracy", "F1_score"]
+      ]
+    }
+  }
+  
 }
 ```
