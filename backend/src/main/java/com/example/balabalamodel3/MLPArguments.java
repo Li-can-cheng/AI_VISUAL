@@ -11,5 +11,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class MLPArguments implements ArgumentsInterface{
     private int epoch = -1;
-    private Layer layer;
+    private Layer[] layer;
 }
