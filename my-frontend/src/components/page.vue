@@ -57,7 +57,7 @@
                         "ReLU1":-1,
                         "linear2":128,
                         "ReLU2":-1,
-                        "linear3":-1
+                        "linear3":10
                     }
                     }
                     }

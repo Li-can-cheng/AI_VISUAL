@@ -4,11 +4,13 @@ import upload from './components/upload.vue'
 import Header from './components/Header.vue'
 import send from './components/send.vue'
 import drag from './components/drag.vue'
+import echarts from './components/e.vue'
 </script>
 
 <template>
   <!-- <drag></drag> -->
-  <Page/>  
+  <!-- <Page/> -->
+  <echarts></echarts>  
   <!-- <upload></upload>
   <br/>
   <send></send> -->

@@ -1,0 +1,106 @@
+<template>
+    <div>
+        <LineCharts :option="option"></LineCharts>
+    </div>
+</template>
+<script>
+    import {reactive,toRefs} from 'vue';
+    import LineCharts from './echarts.vue';
+    export default({
+        components:{
+            LineCharts
+        },
+        setup(){
+            const state=reactive({
+                option:{
+                    title:{
+                        text:'系统折线图'
+                    },
+                    tooltip:{
+                        trigger:'axis',
+                        axisPointer:{
+                            type:'cross',
+                            label:{
+                                backgroundColor:'#6a7985'
+                            }
+                        }
+                    },
+                    legend:{
+                        data:['xz','xf','hy','dd','dr']
+                    },
+                    toolbox:{
+                        feature:{
+                            saveAsImage:{}
+                        }
+                    },
+                    grid:{
+                        left:'3%',
+                        right:'4%',
+                        bottom:'3%',
+                        containLabel:true
+                    },
+                    xAxis:[
+                        {
+                            type:'value'
+                        }
+                    ],
+                    series:[
+                        {
+                            name:'xz',
+                            type:'line',
+                            stack:'zl',
+                            areaStyle:{},
+                            emphasis:{
+                                focus:'series'
+                            },
+                            data:[120,132,101,134,90,230,210]
+                        },
+                        {
+                            name:'xz',
+                            type:'line',
+                            stack:'zl',
+                            areaStyle:{},
+                            emphasis:{
+                                focus:'series'
+                            },
+                            data:[120,132,101,134,90,230,210]
+                        },
+                        {
+                            name:'xz',
+                            type:'line',
+                            stack:'zl',
+                            areaStyle:{},
+                            emphasis:{
+                                focus:'series'
+                            },
+                            data:[120,132,101,134,90,230,210]
+                        },
+                        {
+                            name:'xz',
+                            type:'line',
+                            stack:'zl',
+                            areaStyle:{},
+                            emphasis:{
+                                focus:'series'
+                            },
+                            data:[120,132,101,134,90,230,210]
+                        },
+                        {
+                            name:'xz',
+                            type:'line',
+                            stack:'zl',
+                            areaStyle:{},
+                            emphasis:{
+                                focus:'series'
+                            },
+                            data:[120,132,101,134,90,230,210]
+                        },
+                    ]
+                }
+            })
+            return{
+                ...toRefs(state)
+            }
+        }
+    })
+</script>
