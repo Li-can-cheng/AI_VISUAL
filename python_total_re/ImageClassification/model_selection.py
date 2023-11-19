@@ -11,6 +11,17 @@ from sklearn.model_selection import train_test_split
 import random
 import requests
 from torch.utils.data import Dataset
+import tqdm
+
+# 检查CUDA是否可用
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# 如果使用CUDA，打印提示信息
+if device.type == 'cuda':
+    print("Using CUDA on GPU:", torch.cuda.get_device_name(0))
+else:
+    print("CUDA is not available, using CPU instead.")
+
 
 class MyDataset(Dataset):
     def __init__(self, x_train, y_train):
@@ -24,6 +35,7 @@ class MyDataset(Dataset):
         x = self.x_train[index]
         y = self.y_train[index]
         return x, y
+
 
 def MLP(data, layers, evaluation_functions, epochs=5):
     """
@@ -91,14 +103,14 @@ def MLP(data, layers, evaluation_functions, epochs=5):
 
     # 定义损失函数和优化器
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.001)
+    optimizer = optim.SGD(model.parameters(), lr=0.0001)
 
     # 创建数据加载器
     dataset = TensorDataset(x_train_tensor, y_train_tensor)
     data_loader = DataLoader(dataset, batch_size=64, shuffle=True)
 
     # 训练模型
-    for epoch in range(epochs):
+    for epoch in tqdm.trange(epochs):
         outputs_list = []  # 存储预测列表
         targets_list = []  # label列表
         for inputs, targets in data_loader:
@@ -247,4 +259,3 @@ def CNN(data, layer, evaluation_functions, epochs=5):
     # 返回训练好的模型
     data = (model, score)
     return data
-

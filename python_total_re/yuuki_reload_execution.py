@@ -1,5 +1,7 @@
 import json
 import importlib
+from time import sleep
+
 from fastapi import APIRouter
 from fastapi import Body
 
@@ -14,6 +16,8 @@ async def trainModel(data=Body(None)):
 
     # ① 读取JSON，存储在data_dict中
     data_dict = json.loads(json_string)
+
+    sleep(5)
 
     # ② 确定任务类型
     task = data_dict["task"]  # 由于列表中只有一个值，直接取出来
@@ -58,7 +62,7 @@ async def trainModel(data=Body(None)):
     model_module = importlib.import_module(f"{module_path}.model_selection")
     model_function = getattr(model_module, model_name)
     evaluation_module = importlib.import_module(f"{module_path}.model_evaluation")  # 选择评估模块
-    evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_evaluation"]]  # 获取评估函数
+    evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_selection"]["model_evaluation"]]  # 获取评估函数
     cleaned_model_arguments['evaluation_functions'] = evaluation_functions
     model, score = model_function(**cleaned_model_arguments)
 

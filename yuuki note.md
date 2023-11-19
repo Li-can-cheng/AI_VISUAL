@@ -112,7 +112,7 @@ get访问/1实现传参，手动填充参数。
 package com.example.controller;
 
 import com.example.model.Y_fileInfo;
-import com.example.service.Y_serv;
+import com.example.service.yuuki_serv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

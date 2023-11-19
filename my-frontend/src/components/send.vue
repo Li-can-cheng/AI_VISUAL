@@ -3,8 +3,8 @@
     const data = {
         "name":"MLP",
         "arguments":{
-        "epoch":-1,
-        "layer":{
+        "epochs":-1,
+        "layers":{
         "linear1":256,
         "sigmoid":-1,
         "ReLU1":-1,

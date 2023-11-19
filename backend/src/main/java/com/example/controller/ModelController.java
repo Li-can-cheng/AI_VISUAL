@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class ModelController {
     @Autowired
@@ -36,6 +39,7 @@ public class ModelController {
         import_data.setMethod("import_"+acceptData.getFile_type()+"_data");
         model.setTask(task);
         model.setImport_data(import_data);
+        System.out.println(gson.toJson(import_data));
         return gson.toJson(import_data);
     }
 
@@ -45,7 +49,7 @@ public class ModelController {
         return gson.toJson(data_preprocessing);
     }
     @PostMapping("/model/MLP")
-    public String acceptDataProcessing(@RequestBody MLP model_selection){
+    public ResponseEntity<Map<String, Object>> acceptDataProcessing(@RequestBody MLP model_selection){
 //        if("MLP".equals(model_selection.getName())) {
 //            mlp.setArguments();
 //        }
@@ -62,7 +66,12 @@ public class ModelController {
         String url = "http://localhost:8000/trainModel";
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         // 处理响应（返回的数据）
-        return response.getBody();
+        System.out.println(response.getBody());
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("result", response.getBody());
+
+        return ResponseEntity.ok(responseData);
     }
 
     @PostMapping("/model/send_model_evaluation")
