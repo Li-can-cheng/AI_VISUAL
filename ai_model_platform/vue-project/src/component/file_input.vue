@@ -80,13 +80,13 @@ function dragend_hander(e){
 .file_input_container {
     width: 100%;
     height: 100%;
-    background-color: #eee;
+    /* background-color: #eee; */
 }
 
 .file_input_container .file_container {
     width: 100%;
     height: 80%;
-    background-color: beige;
+    border:3px dashed rgba(0,0,0,0.4);
     display: flex;
     justify-content: flex-start;
     align-items: start;
@@ -113,8 +113,8 @@ function dragend_hander(e){
 
 .file_input_container .button_container {
     width: 100%;
+    margin-top: 2%;
     height: 20%;
-    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -131,4 +131,4 @@ function dragend_hander(e){
     height: 40px;
     border-radius: 50px;
 }
-</style>../store/file
+</style>

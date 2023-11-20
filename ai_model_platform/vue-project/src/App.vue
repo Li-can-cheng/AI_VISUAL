@@ -42,14 +42,14 @@ import echarts_container from './component/echarts.vue';
   display: flex;
   width: 100%;
   height: 100vh;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .left-container {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 78%;
   height: 100%;
   padding: 15px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
@@ -57,11 +57,12 @@ import echarts_container from './component/echarts.vue';
 
 .container .top {
   height: 65%;
-  background-color: #009688;
+  /* background-color: #63ccc2; */
+  border:6px solid rgba(148, 238, 243,0.5);
   display: flex;
   border-radius: 10px;
   color: #fff;
-  padding: 15px;
+  padding: 10px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
   transition: transform 0.3s;
 }
@@ -72,7 +73,9 @@ import echarts_container from './component/echarts.vue';
 
 .container .bottom {
   height: 35%;
-  background-color: #FFC107;
+  border:6px solid rgba(148, 238, 243,0.5);
+  /* background-color: rgb(223, 253, 255); */
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
   display: flex;
   border-radius: 10px;
   color: #333;
@@ -93,20 +96,25 @@ import echarts_container from './component/echarts.vue';
 
 .container .left {
   flex: 2;
-  background-color: #4DD0E1;
+  /* background-color: #bae9ef; */
+  /* background-color: rgba(159, 193, 173,0.5); */
 }
 
 .container .center {
   flex: 6;
-  background-color: #E1BEE7;
   margin-left: 10px;
 }
 
 .container .right {
-  height: 100%;
+  height: 97%;
+  margin-top:0.9%;
+  margin-right: 0.4%;
+  width:20%;
+  width:50px;
   overflow-y: auto;
   flex: 1;
-  background-color: #AED6F1;
+  border:6px solid rgba(148, 238, 243,0.5);
+  background-color: rgba(118, 224, 243,0.1);  
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.1);

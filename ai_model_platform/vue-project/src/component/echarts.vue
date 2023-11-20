@@ -139,10 +139,10 @@ function draw_echart(){
       }
     ],
     grid: {
-      top: '15%',    // 可以调整这些值来拉伸纵轴
+      top: '20%',    // 可以调整这些值来拉伸纵轴
       bottom: '15%',
       left: '15%',
-      right: '15%'
+      right: '28%'
     },
   };
   loss1.setOption(option);
@@ -155,14 +155,14 @@ onMounted(() => {
   let sleep2 = (time) => new Promise((resolve) => {
     setTimeout(resolve, time)
   })
-  sleep2(480000).then(draw_echart);
+  sleep2(1).then(draw_echart);
 
 });
 
 </script>
 <style>
 .echart_container {
-  width: 100%;
+  width: 120%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -170,7 +170,7 @@ onMounted(() => {
 }
 
 .chart {
-  width: 90%;
+  width: 80%;
   height: 40%; /* 增加了高度 */
   margin-bottom: 10px; /* 可以添加一些间隔 */
 }

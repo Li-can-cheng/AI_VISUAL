@@ -55,8 +55,9 @@ function delete_file() {
 <style>
 .net_display_container .file_container {
     height: 100%;
+    border-radius: 5px;
     flex: 1;
-    background-color: antiquewhite;
+    background-color: rgb(215, 249, 250);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,7 +68,7 @@ function delete_file() {
     text-align: center;
     line-height: 80px;
     border-radius: 20px;
-    background-color: chartreuse;
+    /* background-color: chartreuse; */
     /* 禁止用户选择文字，为了美观 */
     user-select: none;
     overflow: hidden;

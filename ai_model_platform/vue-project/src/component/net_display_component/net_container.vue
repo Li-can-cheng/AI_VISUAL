@@ -102,7 +102,7 @@ function run_model() {
 .net_display_container .net_container .header_container {
     width: 100%;
     height: 10%;
-    background-color: cadetblue;
+    background-color:#9ac7da;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -120,15 +120,21 @@ function run_model() {
 .net_display_container .net_container .header_container .name {}
 
 .net_display_container .net_container .header_container .btn {
-    background-color: wheat;
-    border-radius: 30px;
+    background-color: rgb(179, 225, 245);
+    /* border-radius: 30px; */
+    height:100%;
+    font-size: 20px;
+    font-weight: 400;
+    margin-right: 0px;
     cursor: pointer;
 }
 
 .net_display_container .net_container .net_module_container {
     width: 100%;
     height: 90%;
-    background-color: yellowgreen;
+    border-radius: 5px;
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.2);
+    background-color: rgb(255, 255, 255);
     display: flex;
     align-items: center;
     justify-content: flex-start;
