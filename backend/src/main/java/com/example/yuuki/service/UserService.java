@@ -1,5 +1,10 @@
-package com.example.yuuki;
+package com.example.yuuki.service;
 
+import com.example.yuuki.controller.LoginStatus;
+import com.example.yuuki.entity.User;
+import com.example.yuuki.entity.UserModel;
+import com.example.yuuki.repository.UserModelRepository;
+import com.example.yuuki.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

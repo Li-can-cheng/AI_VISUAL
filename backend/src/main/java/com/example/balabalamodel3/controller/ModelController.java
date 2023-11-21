@@ -1,7 +1,7 @@
-package com.example.controller;
+package com.example.balabalamodel3.controller;
 
 import com.example.balabalamodel3.*;
-import com.example.yuuki.UserService;
+import com.example.yuuki.service.UserService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

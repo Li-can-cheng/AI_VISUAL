@@ -172,3 +172,45 @@ public class Y_serv {
 11-20
 
 conda install -c conda-forge websockets
+
+
+
+11-21
+
+# How to start
+
+
+
+vue端：在Visual-AI-Model-Development-Platform\ai_model_platform\vue-project目录下执行
+
+```
+npm run dev
+```
+
+运行端口：5173
+
+
+
+
+
+java端：在Visual-AI-Model-Development-Platform\backend\src\main\java\com\example运行**AiVisualApplication**
+
+运行端口：8080
+
+
+
+
+
+python端：在Visual-AI-Model-Development-Platform\python_total_re运行**main.py**或者
+
+```
+uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+运行端口：8000
+
+
+
+mysql：建立一个架构如db03，执行user_construction.sql和user_model.sql两个文件
+
+运行端口：3306

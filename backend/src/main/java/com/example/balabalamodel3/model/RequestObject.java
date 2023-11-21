@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.balabalamodel3.model;
 
 public class RequestObject
 {

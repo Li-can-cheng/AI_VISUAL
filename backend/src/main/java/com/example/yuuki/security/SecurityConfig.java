@@ -1,4 +1,4 @@
-package com.example.yuuki;
+package com.example.yuuki.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

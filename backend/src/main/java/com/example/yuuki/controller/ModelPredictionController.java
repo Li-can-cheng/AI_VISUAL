@@ -1,4 +1,4 @@
-package com.example.yuuki;
+package com.example.yuuki.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

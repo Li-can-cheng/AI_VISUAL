@@ -1,5 +1,7 @@
-package com.example.yuuki;
+package com.example.yuuki.service;
 
+import com.example.yuuki.entity.UserModel;
+import com.example.yuuki.repository.ModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

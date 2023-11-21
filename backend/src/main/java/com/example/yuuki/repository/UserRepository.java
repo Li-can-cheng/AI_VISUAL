@@ -1,5 +1,6 @@
-package com.example.yuuki;
+package com.example.yuuki.repository;
 
+import com.example.yuuki.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

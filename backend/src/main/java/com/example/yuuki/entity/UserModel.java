@@ -1,4 +1,4 @@
-package com.example.yuuki;
+package com.example.yuuki.entity;
 
 import lombok.Getter;
 
