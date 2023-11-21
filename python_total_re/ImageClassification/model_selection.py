@@ -1,8 +1,15 @@
+import asyncio
+import json
+import logging
+import os
+import sys
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
+from fastapi import FastAPI, WebSocket,APIRouter
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from catboost import CatBoostClassifier
@@ -13,14 +20,20 @@ import requests
 from torch.utils.data import Dataset
 import tqdm
 
+# 设置日志记录
+logging.basicConfig(level=logging.INFO)
+
+
 # 检查CUDA是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 # 如果使用CUDA，打印提示信息
 if device.type == 'cuda':
     print("Using CUDA on GPU:", torch.cuda.get_device_name(0))
 else:
     print("CUDA is not available, using CPU instead.")
+
 
 
 class MyDataset(Dataset):
@@ -37,7 +50,21 @@ class MyDataset(Dataset):
         return x, y
 
 
-def MLP(data, layers, evaluation_functions, epochs=5):
+# WebSocket 连接
+connections = []
+router=APIRouter()
+@router.websocket("/ws/train_mlp_model")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    connections.append(websocket)
+    try:
+        while True:
+            # 保持连接开放
+            await websocket.receive_text()
+    except:
+        connections.remove(websocket)
+
+async def MLP(data, layers, evaluation_functions, epochs=5):
     """
     训练一个多层感知器模型。
 
@@ -109,6 +136,7 @@ def MLP(data, layers, evaluation_functions, epochs=5):
     dataset = TensorDataset(x_train_tensor, y_train_tensor)
     data_loader = DataLoader(dataset, batch_size=64, shuffle=True)
 
+    # sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
     # 训练模型
     for epoch in tqdm.trange(epochs):
         outputs_list = []  # 存储预测列表
@@ -127,6 +155,19 @@ def MLP(data, layers, evaluation_functions, epochs=5):
 
         evaluation_score.append(tuple([eva_func(outputs_list, targets_list) for eva_func in evaluation_functions]))
         loss_list.append(loss.item())  # 储存该epoch下的损失
+        score = {"epoch": epoch + 1, "loss": loss.item()}
+
+        for i, eva_func in enumerate(evaluation_functions):
+            score[eva_func.__name__] = evaluation_score[-1][i]
+
+        # 发送数据到所有连接的 WebSocket 客户端
+        for connection in connections:
+            try:
+                await connection.send_text(json.dumps(score))
+                await asyncio.sleep(0.5)
+            except Exception as e:
+                logging.error(f"Error sending WebSocket message: {e}")
+
         # # 打印训练进度
         # print(f'Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}')
 
@@ -142,6 +183,11 @@ def MLP(data, layers, evaluation_functions, epochs=5):
     #     print("数据发送失败！")
 
     # 返回训练好的模型s
+
+    # save it!
+    model_file_path = "./model.pth"
+    torch.save(model.state_dict(), model_file_path)
+
     data = (model, score)
     return data
 

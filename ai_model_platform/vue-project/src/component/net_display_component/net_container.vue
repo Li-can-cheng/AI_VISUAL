@@ -71,7 +71,9 @@ function run_model() {
         }
     }).then(response => {
         // console.log(response)
-        console.log(response.data.result)
+        console.log(response.data.result
+
+        )
     }).catch(error => {
         console.log(error)
     })
@@ -143,7 +145,7 @@ function run_model() {
 .net_display_container .net_container .net_module_container .linear {
     width: 80px;
     height: 80%;
-    background-color: violet;
+    background-color: #9ac7da;
     margin: 0 40px;
 }
 </style>

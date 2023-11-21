@@ -56,7 +56,7 @@ function delete_data_processing_unit(e){
 .net_display_container .data_processing_container .data_processing_unit{
     width: 80px;
     height: 80px;
-    background-color: thistle;
+    background-color: #63ccc2;
     text-align: center;
     line-height: 80px;
     border-radius: 20px;

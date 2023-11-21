@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>模型预测</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- 设置字符编码为 UTF-8 -->
+    <meta charset="UTF-8">
+    <style>
+        .yuuki {
+            desplay: flex;
+        }
+
+        .model-container {
+            max-height: 400px; /* 或者你想要的任何高度 */
+            overflow-y: auto; /* 添加垂直滚动条 */
+            margin-bottom: 20px; /* 如果需要，添加一些底部间距 */
+            height: 400px;
+        }
+
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg-color: #ffffff;
+            --primary-color: #007bff;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --primary-color-dark: #0069d9; /* 暗色版本 */
+        }
+
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .model-container {
+            background-color: var(--bg-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* 其他的样式可以根据需要添加 */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 10px 20px;
+            color: var(--card-bg-color);
+            box-shadow: var(--box-shadow);
+            transition: background-color 0.3s ease;
+            margin-left: 300px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .chart {
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        /* 继续添加更多的风格化样式 */
+        .image-upload {
+            background-color: var(--bg-color);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            border: 1px dashed var(--text-color);
+            width: 400px;
+        }
+
+        #image-preview-container {
+            width: 400px; /* 指定图片框的宽度 */
+            height: 400px; /* 指定图片框的高度 */
+            border-radius: var(--border-radius); /* 边角圆润 */
+            overflow: hidden; /* 裁剪溢出容器的图片 */
+            box-shadow: var(--box-shadow); /* 盒子阴影 */
+            background-color: #eee; /* 背景色，可根据需要更改 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px; /* 根据需要调整内边距 */
+        }
+
+        #image-preview {
+            width: 100%; /* 让图片填充整个容器 */
+            height: 100%; /* 让图片填充整个容器 */
+            object-fit: cover; /* 裁剪图片以保持纵横比，填满容器 */
+            border-radius: var(--border-radius); /* 如果需要，也可以为图片设置圆角 */
+        }
+
+
+        /* Bootstrap Overrides for Alerts */
+
+        /* Secondary Alert */
+        .alert-secondary {
+            background-color: #f2f2f2; /* 更淡的灰色背景 */
+            border: none; /* 移除边框 */
+            color: #333; /* 较深的文字颜色 */
+            border-radius: var(--border-radius); /* 圆润的角落 */
+            padding: 0.75rem 1.25rem; /* 调整内间距 */
+            box-shadow: 0 2px 4px 0 rgba(108, 117, 125, 0.1); /* 添加微妙的阴影效果 */
+            margin-top: 1rem; /* 保持 margin-top 为 3 */
+            transition: all 0.2s ease-in-out; /* 平滑过渡效果 */
+            width: 1200px;
+        }
+
+        /* Info Alert */
+        .alert-info {
+            background-color: #d1ecf1; /* 蓝绿色背景 */
+            border: none; /* 移除边框 */
+            color: #0c5460; /* 文字颜色 */
+            border-radius: var(--border-radius); /* 圆润的角落 */
+            padding: 0.75rem 1.25rem; /* 调整内间距 */
+            box-shadow: 0 2px 4px 0 rgba(23, 162, 184, 0.1); /* 添加微妙的阴影效果 */
+            margin-top: 1rem; /* 保持 margin-top 为 3 */
+            transition: all 0.2s ease-in-out; /* 平滑过渡效果 */
+        }
+
+        /* General Alert Modifications */
+        .alert {
+            position: relative;
+            overflow: hidden; /* 防止内容溢出 */
+            display: block; /* 确保 alert 是块级元素 */
+        }
+
+        .alert::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .modern-border {
+            border: 1px solid #ddd; /* 灰色边框 */
+            padding: 10px; /* 内边距 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 盒子阴影，增加立体感 */
+            transition: all 0.3s ease-in-out; /* 平滑过渡效果 */
+        }
+
+        .modern-border:hover {
+            border-color: #007bff; /* 鼠标悬停时的边框颜色 */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 鼠标悬停时的阴影效果 */
+        }
+
+
+
+    </style>
+
+
+</head>
+<body>
+<div class="container my-4">
+
+    <div class="row">
+        <!-- 左侧列：模型选择和预测按钮 -->
+        <div class="col-md-8">
+            <div class="model-container">
+                <div class="card" th:each="model : ${models}"
+                     th:attr="onclick='selectModel(this, ' + ${model.modelId} + ', `' + ${model.modelMetadata} + '`)'">
+
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${model.modelId}">模型名称</h5>
+                        <p class="card-text" th:text="${model.modelPath}">模型路径</p>
+                        <p class="card-text" th:text="${model.createdAt}">创建时间</p>
+                        <div class="model-metadata" style="display: none;" th:text="${model.modelMetadata}"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button type="button" onclick="predictModel()" class="btn btn-primary">模型预测</button>
+        </div>
+
+        <!-- 右侧列：图片上传和预览 -->
+        <div class="user-icon" style="position: fixed; top: 10px; right: 10px;">
+            <img src="/img/9752ac2117c913b91ca4123d6152acef.jpeg" alt="User"
+                 style="width: 50px; height: 50px; border-radius: 50%;"/>
+        </div>
+
+        <div class="col-md-4">
+            <div class="image-upload mb-3">
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    <input type="file" name="image" accept="image/*" onchange="previewImage(event)"
+                           class="form-control-file"/>
+                </form>
+            </div>
+            <div id="image-preview-container" class="mb-3">
+                <img id="image-preview" style="max-width: 100%; height: auto;" class="img-thumbnail" alt="未上传"/>
+            </div>
+        </div>
+        <!-- 结果显示区 -->
+        <div class="yuuki">
+            <!-- 元数据显示区 -->
+            <div id="model-metadata-container" class="alert alert-secondary mt-3">
+                <p id="metadata-text">模型元数据将在这里显示</p>
+            </div>
+            <div id="prediction-result" class="alert alert-info mt-3">
+                <p id="result-text">结果将在这里显示</p>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- 引入 Bootstrap JS -->
+</body>
+<script>
+    // JavaScript 函数，用于发送模型预测请求
+    function predictModel() {
+        // 获取结果显示元素
+        const resultElement = document.getElementById('prediction-result');
+
+        // 初始化预测文本和点的数量
+        let predictionText = '预测中';
+        resultElement.innerText = predictionText;
+
+        // 设置一个定时器来循环添加点
+        const dotInterval = setInterval(() => {
+            if (predictionText.length >= 14) {
+                predictionText = '预测中';
+            } else {
+                predictionText += '  .';
+            }
+            resultElement.innerText = predictionText;
+        }, 250); // 每500毫秒更新一次
+
+        // 使用 selectedModelId 进行模型预测
+        fetch('http://localhost:8080/predict-model', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({modelId: selectedModelId})
+        })
+            .then(response => response.text())
+            .then(data => {
+                clearInterval(dotInterval); // 清除定时器
+                resultElement.innerText = data; // 显示实际的预测结果
+            })
+            .catch(error => {
+                clearInterval(dotInterval); // 清除定时器
+                resultElement.innerText = '预测失败: ' + error.message; // 出错时显示错误信息
+            });
+    }
+
+
+
+    // 修改模型选择函数，将模型 ID 保存到一个变量中
+    let selectedModelId = null;
+
+    function selectModel(cardElement, modelId, modelMetadata) {
+        console.log("Card clicked: ", modelId);
+        document.querySelectorAll('.model-container .card').forEach(card => {
+            card.classList.remove('bg-primary', 'text-white');
+        });
+        cardElement.classList.add('bg-primary', 'text-white');
+        selectedModelId = modelId;
+        document.getElementById('metadata-text').textContent = modelMetadata;
+    }
+
+
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('image-preview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+</html>

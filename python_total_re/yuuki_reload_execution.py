@@ -1,12 +1,14 @@
+import asyncio
 import json
 import importlib
 from time import sleep
 
-from fastapi import APIRouter
+from fastapi import APIRouter, WebSocket
 from fastapi import Body
 
 router = APIRouter()
 score = None
+
 
 @router.post("/trainModel")
 async def trainModel(data=Body(None)):
@@ -62,9 +64,11 @@ async def trainModel(data=Body(None)):
     model_module = importlib.import_module(f"{module_path}.model_selection")
     model_function = getattr(model_module, model_name)
     evaluation_module = importlib.import_module(f"{module_path}.model_evaluation")  # 选择评估模块
-    evaluation_functions = [getattr(evaluation_module, fun) for fun in data_dict["model_selection"]["model_evaluation"]]  # 获取评估函数
+    evaluation_functions = [getattr(evaluation_module, fun) for fun in
+                            data_dict["model_selection"]["model_evaluation"]]  # 获取评估函数
     cleaned_model_arguments['evaluation_functions'] = evaluation_functions
-    model, score = model_function(**cleaned_model_arguments)
+    model, score = await model_function(**cleaned_model_arguments)
+
 
     # 这里是传回给java的东西。
     return score

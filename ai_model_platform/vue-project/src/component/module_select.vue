@@ -77,7 +77,7 @@ function dragend_hander(e) {
          @dragstart="dragstart_hander_all">SVM
     </div>
     <div class="item" category="linear" draggable="true"
-         @dragstart="dragstart_hander_all">Z-index
+         @dragstart="dragstart_hander_all">Linear
     </div>
   </div>
 </template>

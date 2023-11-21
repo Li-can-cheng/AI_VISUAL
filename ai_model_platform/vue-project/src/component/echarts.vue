@@ -155,7 +155,7 @@ onMounted(() => {
   let sleep2 = (time) => new Promise((resolve) => {
     setTimeout(resolve, time)
   })
-  sleep2(1).then(draw_echart);
+  sleep2(480000).then(draw_echart);
 
 });
 
@@ -172,6 +172,7 @@ onMounted(() => {
 .chart {
   width: 80%;
   height: 40%; /* 增加了高度 */
+  margin-bottom: 10px; /* 可以添加一些间隔 */
   margin-bottom: 10px; /* 可以添加一些间隔 */
 }
 </style>
